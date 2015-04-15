@@ -2,40 +2,47 @@
 % Datum: 31.03.2015
 
 % elternteil(X,Y) -> X ist Elternteil von Y
-  elternteil(noah,daniel).
-  elternteil(emma,daniel).
-  elternteil(noah,linus).
-  elternteil(emma,linus).
-  elternteil(noah,laura).
-  elternteil(emma,laura).
-  elternteil(julian,marvin).
-  elternteil(anna,marvin).
-  elternteil(julian,julia).
-  elternteil(anna,julia).
-  elternteil(julian,samira).
-  elternteil(anna,samira).
-  elternteil(jonas,noah).
-  elternteil(lena,noah).
-  elternteil(lena,emma).
-  elternteil(david,emma).
-  elternteil(david,julian).
-  elternteil(lisa,julian).
-  elternteil(lisa,anna).
-  elternteil(luca,anna).
-  elternteil(levin,jonas).
-  elternteil(vanessa,jonas).
-  elternteil(levin,luca).
-  elternteil(vanessa,luca).
-  elternteil(liam,lisa).
-  elternteil(mila,lisa).
-  elternteil(alexander,levin).
-  elternteil(emilia,levin).
-  elternteil(alexander,liam).
-  elternteil(emilia,liam).
+  elternteil(alexander, levin).
+  elternteil(alexander, vanessa).
+  elternteil(emilia, levin).
+  elternteil(emilia, vanessa).
+  elternteil(levin, jonas).
+  elternteil(levin, lena).
+  elternteil(levin, david).
+  elternteil(lisa, jonas).
+  elternteil(lisa, lena).
+  elternteil(lisa, david).
+  elternteil(vanessa, julian).
+  elternteil(liam, julian).
+  elternteil(julian, noah).
+  elternteil(julian, marcel).
+  elternteil(anna, samira).
+  elternteil(anna, emma).
+  elternteil(luca, samira).
+  elternteil(luca, emma).
+  elternteil(samira, noah).
+  elternteil(samira, marcel).
+  elternteil(emma, kevin).
+  elternteil(emma, lina).
+  elternteil(emma, mila).
+  elternteil(emma, lea).
+  elternteil(david, kevin).
+  elternteil(david, lina).
+  elternteil(david, mila).
+  elternteil(david, lea).
+
+
+% verheiratet(X,Y) -> mann(X) ist mit frau(Y) verheiratet
+  verheitatet(alexander, emilia).
+  verheitatet(levin, lisa).
+  verheitatet(liam, vanessa).
+  verheitatet(david, emma).
+  verheitatet(julian, samira).
+  verheitatet(luca, anna).
 
 
 % Mann und Frau muss expliziet angegeben werden,
-% denn auch wenn teoretisch gilt (nicht Mann) == Frau,
+% denn auch wenn theoretisch gilt (nicht Mann) == Frau,
 % gilt in Prolog, dass alle nicht in der Liste aufgeführten
 % Personen (z.B. bei den Männern) automatisch keine Männer sind.
 % mann(X) -> X ist ein Mann
