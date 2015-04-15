@@ -32,13 +32,15 @@
   elternteil(david, lea).
 
 
-% verheiratet(X,Y) -> mann(X) ist mit frau(Y) verheiratet
-  verheitatet(alexander, emilia).
-  verheitatet(levin, lisa).
-  verheitatet(liam, vanessa).
-  verheitatet(david, emma).
-  verheitatet(julian, samira).
-  verheitatet(luca, anna).
+% verheiratet(X,Y) -> X ist mit Y verheiratet
+  verheiratet(alexander, emilia).
+  verheiratet(levin, lisa).
+  verheiratet(liam, vanessa).
+  verheiratet(david, emma).
+  verheiratet(julian, samira).
+  verheiratet(luca, anna).
+
+  verheiratet(X,Y) :- mann(Y), frau(X), verheiratet(Y,X).
 
 
 % Mann und Frau muss expliziet angegeben werden,
