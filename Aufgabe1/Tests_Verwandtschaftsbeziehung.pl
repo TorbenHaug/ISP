@@ -1,5 +1,6 @@
 % Autor:
 % Datum: 15.04.2015
+% Tests verden mit run_tests(<testname>). ausgeführt
 
 :-begin_tests(vater).
   test(vater) :- vater(luca, emma).
@@ -66,52 +67,60 @@
   test(schwester) :- assertion(not(schwester(lena, lisa))).
 :-end_tests(schwester).
 
-%Tests verden mit run_tests(<testname>). ausgeführt
-
-
-
-
-
-
-
-
-
-
 :-begin_tests(onkel).
   test(onkel) :- assertion(onkel(levin, julian)).
   test(onkel) :- assertion(onkel(jonas, kevin)).
   test(onkel) :- assertion(onkel(jonas, lina)).
-  test(onkel) :- not(onkel(liam, david)).
-  test(onkel) :- not(onkel(lena, kevin)).
+  test(onkel) :- assertion(not(onkel(liam, david))).
+  test(onkel) :- assertion(not(onkel(lena, kevin))).
 :-end_tests(onkel).
 
 :-begin_tests(tante).
   test(tante) :- assertion(tante(samira, lea)).
   test(tante) :- assertion(tante(samira, kevin)).
-  test(tante) :- not(tante(lisa, julian)).
-  test(tante) :- not(tante(levin, julian)).
+  test(tante) :- assertion(not(tante(lisa, julian))).
+  test(tante) :- assertion(not(tante(levin, julian))).
 :-end_tests(tante).
-% tante(X,Y) -> X ist Tante von Y
 
+:-begin_tests(grossonkel).
+  test(grossonkel) :- assertion(grossonkel(levin, noah)).
+  test(grossonkel) :- assertion(not(grossonkel(liam, kevin))).
+  test(grossonkel) :- assertion(not(grossonkel(vanessa, lina))).
+:-end_tests(grossonkel).
 
+:-begin_tests(grosstante).
+  test(grosstante) :- assertion(grosstante(vanessa, lina)).
+  test(grosstante) :- assertion(not(grosstante(lisa, noah))).
+  test(grosstante) :- assertion(not(grosstante(anna, mila))).
+:-end_tests(grosstante).
 
-% grossonkel(X,Y) -> X ist Großonkel von Y
+:-begin_tests(cousin).
+  test(cousin) :- assertion(cousin(marcel, kevin)).
+  test(cousin) :- assertion(cousin(kevin, marcel)).
+  test(cousin) :- assertion(cousin(julian, lena)).
+  test(cousin) :- assertion(not(cousin(lisa, noah))).
+  test(cousin) :- assertion(not(cousin(lena, julian))).
+:-end_tests(cousin).
 
-% grosstante(X,Y) -> X ist Großtante von Y
+:-begin_tests(cousine).
+  test(cousine) :- assertion(cousine(lena, julian)).
+  test(cousine) :- assertion(not(cousine(julian, lena))).
+:-end_tests(cousine).
 
-
-
-% cousin(X,Y) -> X ist Cousin von Y.
-
-% cousine(X,Y) -> X ist Cousine von Y
-
-
-
-% schwager(X,Y) -> X ist Schwager von Y
-
-%schwaegerin(X,Y) -> X ist Schwägerin von Y
+:-begin_tests(schwager).
+  test(schwager) :- assertion(schwager(liam, levin)).
+  test(schwager) :- assertion(schwager(levin, liam)).
+  test(schwager) :- assertion(not(schwager(lisa, vanessa))).
+  test(schwager) :- assertion(not(schwager(vanessa, lisa))).
+  test(schwager) :- assertion(not(schwager(emma, julian))).
+  test(schwager) :- assertion(schwager(julian, emma)).
+:-end_tests(schwager).
 
 :-begin_tests(schwaegerin).
+  test(schwaegerin) :- assertion(not(schwaegerin(liam, levin))).
+  test(schwaegerin) :- assertion(not(schwaegerin(levin, liam))).
   test(schwaegerin) :- assertion(schwaegerin(lisa, vanessa)).
   test(schwaegerin) :- assertion(schwaegerin(vanessa, lisa)).
+  test(schwaegerin) :- assertion(schwaegerin(emma, julian)).
+  test(schwaegerin) :- assertion(not(schwaegerin(julian, emma))).
 :-end_tests(schwaegerin).
