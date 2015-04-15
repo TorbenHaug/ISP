@@ -71,6 +71,8 @@ cousine(X,Y) :- frau(X),  tante(Z,Y), elternteil(Z,X).
 
 % schwager(X,Y) -> X ist Schwager von Y
 schwager(X,Y) :- verheiratet(Y,Z), bruder(X,Z).
+schwager(Y,X) :- mann(Y), verheiratet(Y,Z), schwester(Z,X).
 
 %schwaegerin(X,Y) -> X ist Schwägerin von Y
 schwaegerin(X,Y) :- verheiratet(Y,Z), schwester(X,Z).
+schwaegerin(Y,X) :- frau(Y), verheiratet(Y,Z), bruder(Z,X).
