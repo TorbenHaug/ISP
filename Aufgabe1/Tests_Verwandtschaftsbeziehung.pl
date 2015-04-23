@@ -124,3 +124,21 @@
   test(schwaegerin) :- assertion(schwaegerin(emma, julian)).
   test(schwaegerin) :- assertion(not(schwaegerin(julian, emma))).
 :-end_tests(schwaegerin).
+
+:-begin_tests(schwippschwager).
+  test(schwippschwager) :- assertion(schwippschwager(julian, david)).
+  test(schwippschwager) :- assertion(schwippschwager(david, julian)).
+  test(schwippschwager) :- assertion(schwippschwager(liam, lisa)).
+  test(schwippschwager) :- assertion(not(schwippschwager(lisa, liam ))).
+  test(schwippschwager) :- assertion(not(schwippschwager(emma, elias))).
+  test(schwippschwager) :- assertion(schwippschwager(elias, emma)).
+:-end_tests(schwippschwager).
+
+:-begin_tests(schwippschwagerin).
+  test(schwippschwagerin) :- assertion(schwippschwagerin(lisa, liam )).
+  test(schwippschwagerin) :- assertion(not(schwippschwagerin(liam, lisa))).
+  test(schwippschwagerin) :- assertion(schwippschwagerin(emma, elias)).
+  test(schwippschwagerin) :- assertion(not(schwippschwagerin(elias, emma))).
+  test(schwippschwagerin) :- assertion(schwippschwagerin(samira, lena)).
+  test(schwippschwagerin) :- assertion(schwippschwagerin(lena, samira)).
+:-end_tests(schwippschwagerin).

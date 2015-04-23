@@ -11,16 +11,20 @@ vater(X,Y) :- mann(X), elternteil(X,Y).
 mutter(X,Y) :- frau(X), elternteil(X,Y).
 
 
+% grosselternteil(X, Y) -> X ist Oma oder Opa von Y
+grosselternteil(X, Y) :- elternteil(X,Z), elternteil(Z,Y).
+
 
 % opa(X,Y) -> X ist Opa von Y
-opa(X,Y) :- mann(X), vater(X,Z), elternteil(Z,Y).
+opa(X,Y) :- mann(X), grosselternteil(X,Y).
+opa2(X,Y) :- grosselternteil(X,Y), mann(X).
 
 % oma(X,Y) -> X ist Oma von Y.
-oma(X,Y) :- frau(X), mutter(X,Z), elternteil(Z,Y).
+oma(X,Y) :- frau(X), grosselternteil(X,Y).
 
-% grosselternteil(X, Y) -> X ist Oma oder Opa von Y
-grosselternteil(X, Y) :- oma(X,Y).
-grosselternteil(X, Y) :- opa(X,Y).
+
+%grosselternteil(X, Y) :- oma(X,Y).
+%grosselternteil(X, Y) :- opa(X,Y).
 
 
 
@@ -68,11 +72,27 @@ cousine(X,Y) :- frau(X),  onkel(Z,Y), elternteil(Z,X).
 cousine(X,Y) :- frau(X),  tante(Z,Y), elternteil(Z,X).
 
 
+% schwager_(X,Y) -> X ist Schwager von Y
+schwager(X,Y) :- verheiratet(Y,Z), geschwister(X,Z), mann(X).
+schwager(X,Y) :- mann(X), verheiratet(X,Z), geschwister(Y,Z),frau(Z).
 
 % schwager(X,Y) -> X ist Schwager von Y
-schwager(X,Y) :- verheiratet(Y,Z), bruder(X,Z).
-schwager(Y,X) :- mann(Y), verheiratet(Y,Z), schwester(Z,X).
+% schwager(X,Y) :- verheiratet(Y,Z), bruder(X,Z).
+ schwager(Y,X) :- mann(Y), verheiratet(Y,Z), schwester(Z,X).
 
-%schwaegerin(X,Y) -> X ist Schwägerin von Y
+% schwaegerin(X,Y) -> X ist Schwägerin von Y
 schwaegerin(X,Y) :- verheiratet(Y,Z), schwester(X,Z).
 schwaegerin(Y,X) :- frau(Y), verheiratet(Y,Z), bruder(Z,X).
+
+
+% schwippschwager_(X,Y) -> X ist Schwippschwager von Y
+schwippschwager_(X,Y) :- verheiratet(X,Z), geschwister(Z,A), verheiratet(A,Y).
+schwippschwager_(X,Y) :- geschwister(X,Z), verheiratet(Z,A), geschwister(A,Y).
+
+
+% schwippschwager(X,Y) -> X ist Schwippschwager von Y
+schwippschwager(X,Y) :- mann(X), schwippschwager_(X,Y).
+
+% schwippschwagerin(X,Y) -> X ist Schwippschwagerin von Y
+schwippschwagerin(X,Y) :- frau(X), schwippschwager_(X,Y).
+

@@ -30,6 +30,8 @@
   elternteil(david, lina).
   elternteil(david, mila).
   elternteil(david, lea).
+  elternteil(vanessa, elias).
+  elternteil(liam, elias).
 
 
 % verheiratet(X,Y) -> X ist mit Y verheiratet
@@ -69,6 +71,7 @@
   mann(samuel).
   mann(levi).
   mann(jan).
+  mann(elias).
   
 
   
