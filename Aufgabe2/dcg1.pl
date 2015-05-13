@@ -7,14 +7,15 @@
   s(SemS, s(V, PN, NP, PP)) --> v(V,AGR), pn(SemPN,PN,AGR), np(SemNP,NP,AGR), pp(SemPP, PP,AGR),
                                 {SemS =.. [SemNP,SemPN,SemPP]}.
 % a := Antwort
-  a   -->   s(SemS, s(IP, VP, PP))
+  a(SemA,s(PN, VP, PP))   -->    { SemA =.. [SemVP,SemPN,SemPP] },
+                                 pn(SemPN,PN,AGR),vp(SemVP, VP,AGR), pp(SemPP,PP,AGR), !.
   
 % vp := Verbphrase
   vp(SemNP, vp(V, NP),AGR)       --> v(V,AGR), np(SemNP, NP,AGR).
   
 % np := Nominalphrase
   np(SemN, np(DET, N),AGR)      --> det(DET,AGR), n(SemN, N,AGR).
-  np(SemN, np(N),AGR)           --> n(SemN, N,AGR).
+  np(SemN, np(N), AGR)           --> n(SemN, N,AGR).
 
   
 % pp := Präpositionalphrase
