@@ -2,31 +2,33 @@
 % Datum: 08.05.2015
 
 % s := Satz
-  s(s(IP, VP, PP))    --> ip(IP,AGR), vp(VP,AGR), pp(PP,AGR).
-  s(s(V, PN, NP, PP)) --> v(V,AGR), pn(PN,AGR), np(NP,AGR), pp(PP,AGR).
+  s(SemS, s(IP, VP, PP))    --> ip(IP,AGR), vp(SemVP, VP,AGR), pp(SemPP,PP,AGR),
+                                {SemS =.. [SemVP, _, SemPP]}.
+  s(SemS, s(V, PN, NP, PP)) --> v(V,AGR), pn(SemPN,PN,AGR), np(SemNP,NP,AGR), pp(SemPP, PP,AGR),
+                                {SemS =.. [SemNP,SemPN,SemPP]}.
   
 % vp := Verbphrase
-  vp(vp(V, NP),AGR)       --> v(V,AGR), np(NP,AGR).
+  vp(SemNP, vp(V, NP),AGR)       --> v(V,AGR), np(SemNP, NP,AGR).
   
 % np := Nominalphrase
-  np(np(DET, N),AGR)      --> det(DET,AGR), n(N,AGR).
-  np(np(N),AGR)           --> n(N,AGR).
+  np(SemN, np(DET, N),AGR)      --> det(DET,AGR), n(SemN, N,AGR).
+  np(SemN, np(N),AGR)           --> n(SemN, N,AGR).
 
   
 % pp := Präpositionalphrase
-  pp(pp(PRAE, PN),AGR)    --> prae(PRAE,AGR), pn(PN,_).
+  pp(SemPN,pp(PRAE, PN),AGR)    --> prae(PRAE,AGR), pn(SemPN, PN,_).
 
 % v := verb
   v(v(V),AGR)             --> [X], {lex(X,V,v,AGR)}.
 
 % n := Nomen
-  n(n(N),AGR)             --> [X], {lex(X,N,n,AGR)}.
+  n(N,n(N),AGR)             --> [X], {lex(X,N,n,AGR)}.
 
 % prae := Präposition
   prae(prae(Prae),AGR)    --> [X], {lex(X,Prae,prae,AGR)}.
   
 % pn := Eigenname
-  pn(pn(PN),AGR)          --> [X], {lex(X,PN,pn,AGR)}.
+  pn(PN,pn(PN),AGR)          --> [X], {lex(X,PN,pn,AGR)}.
   
 % ip : Iterogativpronomen
   ip(ip(IP),AGR)          --> [X], {lex(X,IP,ip,AGR)}.
@@ -71,5 +73,4 @@
 % lex PN
   lex(PN, PN, pn, m) :- mann(PN).
   lex(PN, PN, pn, w) :- frau(PN).
-
 
