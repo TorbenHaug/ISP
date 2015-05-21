@@ -2,13 +2,16 @@
 % Datum: 08.05.2015
 
 % s := Satz
-  s(SemS, s(IP, VP, PP))    --> ip(IP,AGR), vp(SemVP, VP,AGR), pp(SemPP,PP,AGR),
-                                {SemS =.. [SemVP, _, SemPP]}.
-  s(SemS, s(V, PN, NP, PP)) --> v(V,AGR), pn(SemPN,PN,AGR), np(SemNP,NP,AGR), pp(SemPP, PP,AGR),
-                                {SemS =.. [SemNP,SemPN,SemPP]}.
+  s(SemS, s(IP, VP, PP))        --> ip(IP,AGR), vp(SemVP, VP,AGR), pp(SemPP,PP,AGR),
+                                    {SemS =.. [SemVP, _, SemPP]}.
+  s(SemS, s(V, PN, NP, PP))     --> v(V,AGR), pn(SemPN,PN,AGR), np(SemNP,NP,AGR), pp(SemPP, PP,AGR),
+                                    {SemS =.. [SemNP,SemPN,SemPP]}.
+% a := Antwort
+  a(SemA, a(PN, VP, PP))        --> {SemA =.. [SemVP, SemPN, SemPP]},
+                                    pn(SemPN, PN, AGR), vp(SemVP, VP, AGR), pp(SemPP, PP, AGR).
   
 % vp := Verbphrase
-  vp(SemNP, vp(V, NP),AGR)       --> v(V,AGR), np(SemNP, NP,AGR).
+  vp(SemNP, vp(V, NP),AGR)      --> v(V,AGR), np(SemNP, NP,AGR).
   
 % np := Nominalphrase
   np(SemN, np(DET, N),AGR)      --> det(DET,AGR), n(SemN, N,AGR).
@@ -19,22 +22,22 @@
   pp(SemPN,pp(PRAE, PN),AGR)    --> prae(PRAE,AGR), pn(SemPN, PN,_).
 
 % v := verb
-  v(v(V),AGR)             --> [X], {lex(X,V,v,AGR)}.
+  v(v(V),AGR)                   --> [X], {lex(X,V,v,AGR)}.
 
 % n := Nomen
-  n(N,n(N),AGR)             --> [X], {lex(X,N,n,AGR)}.
+  n(N,n(N),AGR)                 --> [X], {lex(X,N,n,AGR)}.
 
 % prae := Präposition
-  prae(prae(Prae),AGR)    --> [X], {lex(X,Prae,prae,AGR)}.
+  prae(prae(Prae),AGR)          --> [X], {lex(X,Prae,prae,AGR)}.
   
 % pn := Eigenname
-  pn(PN,pn(PN),AGR)          --> [X], {lex(X,PN,pn,AGR)}.
+  pn(PN,pn(PN),AGR)             --> [X], {lex(X,PN,pn,AGR)}.
   
 % ip : Iterogativpronomen
-  ip(ip(IP),AGR)          --> [X], {lex(X,IP,ip,AGR)}.
+  ip(ip(IP),AGR)                --> [X], {lex(X,IP,ip,AGR)}.
 
 % det := Artikel
-  det(det(DET),AGR)       --> [X], {lex(X,DET,det,AGR)}.
+  det(det(DET),AGR)             --> [X], {lex(X,DET,det,AGR)}.
   
   
 % lex IP
@@ -43,6 +46,8 @@
 % lex DET
   lex(der, der, det, m).
   lex(die, die, det, w).
+  lex(ein, ein, det, m).
+  lex(eine, ein, det, w).
 
 % lex PRAE
   lex(von, von, prae, _).
