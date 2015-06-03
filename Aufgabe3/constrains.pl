@@ -49,15 +49,29 @@ solve_const :-
               sortByIndex(Pet,[dog, snake, zebra, fox, horse],PetSorted),
               sortByIndex(Drink,[tea, orangejuice, milk, water, coffee],DrinkSorted),
               sortByIndex(Cigarette,[oldgold, kools, chesterfield, luckystrike, parliament],CigaretteSorted),
-              
-              writeConst(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted,1).
+              write_const(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted,1).
               
 sortByIndex(Index, Values, Goal) :-
               pairs_keys_values(KeyVal, Index, Values),
               sort(KeyVal,KeyValSorted),
               pairs_values(KeyValSorted,Goal).
 
-writeConst([Color|ColorRest],
+              
+structure([Color|ColorRest],
+           [Nat|NationalityRest],
+           [Pet|PetRest],
+           [Drink|DrinkRest],
+           [Cigarette|CigaretteRest], Out) :-
+                append([Color, Nat, Pet, Drink, Cigarette], [Out], Out1),
+                structure(ColorRest,
+                            NationalityRest,
+                            PetRest,
+                            DrinkRest,
+                            CigaretteRest,
+                            Out1
+                 ).
+                            
+write_const([Color|ColorRest],
            [Nat|NationalityRest],
            [Pet|PetRest],
            [Drink|DrinkRest],
