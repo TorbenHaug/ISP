@@ -22,7 +22,7 @@ pet(horse).
 drink(tea).
 drink(orangejuice).
 drink(milk).
-drink(butter).
+drink(water).
 drink(coffee).
 
 cigarette(oldgold).
@@ -32,12 +32,11 @@ cigarette(luckystrike).
 cigarette(parliament).
 
 
-solve :- test(Houses), generate(Houses), writehouses(Houses).
+solve :- einsteintest(Houses), generate(Houses), writehouses(Houses,1).
 
 %house(Used,Output)
 house(UsedInput,UsedOutput,[Color,Nationality,Pet,Drink,Cigarette]) :-
-                      Color = color(_),Nationality = nationality(_), Pet = pet(_),Drink = drink(_),Cigarette = cigarette(_),
-                      Color,Nationality,Pet,Drink,Cigarette,
+                      color(Color), nationality(Nationality), pet(Pet), drink(Drink), cigarette(Cigarette),
                       not(member(Color,UsedInput)),
                       not(member(Nationality,UsedInput)),
                       not(member(Pet,UsedInput)),
@@ -53,27 +52,33 @@ generate([House1,House2,House3,House4,House5]) :-
                       house(House4Used,_,House5).
 
 
-test(Houses) :- Houses = [_,_,[_,_,_,drink(milk),_],_,_],                 %9
-                Houses = [[_,nationality(norway),_,_,_],_,_,_,_],         %10
-                member([color(red),nationality(english),_,_,_], Houses),  %2
-                member([_,nationality(spanish),pet(dog),_,_], Houses),    %3
-                member([color(green),_,_,drink(coffee),_], Houses),       %4
-                member([_,nationality(ukraine),_,drink(tea),_], Houses),  %5
-                member([_,_,pet(snake),_,cigarette(oldgold)], Houses),    %7
-                member([color(yellow),_,_,_,cigarette(kools)], Houses),   %8
-                member([_,_,_,drink(orangejuice),cigarette(luckystrike)], Houses), %13
-                member([_,nationality(japan),_,_,cigarette(parliament)], Houses),  %14
-                neighbour([color(ivory),_,_,_,_],[color(green),_,_,_,_], Houses),   %6
-                simpleNeighbour([_,_,_,_,cigarette(chesterfield)],[_,_,pet(fox),_,_], Houses), %11
-                simpleNeighbour([_,_,_,_,cigarette(kools)],[_,_,pet(horse),_,_], Houses), %12
-                simpleNeighbour([color(blue),_,_,_,_],[_,nationality(norway),_,_,_], Houses). %15
+einsteintest(Houses) :- Houses = [_,_,[_,_,_,milk,_],_,_],                 %9
+                Houses = [[_,norway,_,_,_],_,_,_,_],         %10
+                member([red,english,_,_,_], Houses),  %2
+                member([_,spanish,dog,_,_], Houses),    %3
+                member([green,_,_,coffee,_], Houses),       %4
+                member([_,ukraine,_,tea,_], Houses),  %5
+                member([_,_,snake,_,oldgold], Houses),    %7
+                member([yellow,_,_,_,kools], Houses),   %8
+                member([_,_,_,orangejuice,luckystrike], Houses), %13
+                member([_,japan,_,_,parliament], Houses),  %14
+                neighbour([ivory,_,_,_,_],[green,_,_,_,_], Houses),   %6
+                simpleNeighbour([_,_,_,_,chesterfield],[_,_,fox,_,_], Houses), %11
+                simpleNeighbour([_,_,_,_,kools],[_,_,horse,_,_], Houses), %12
+                simpleNeighbour([blue,_,_,_,_],[_,norway,_,_,_], Houses). %15
                 
 simpleNeighbour(HouseLeft,HouseRight,Houses) :- neighbour(HouseLeft,HouseRight,Houses).
 simpleNeighbour(HouseLeft,HouseRight,Houses) :- neighbour(HouseRight,HouseLeft,Houses).
 neighbour(HouseLeft,HouseRight,[HouseLeft,HouseRight|_]).
 neighbour(HouseLeft,HouseRight,[_|Rest]) :- neighbour(HouseLeft,HouseRight,Rest).
 
-writehouses(Houses) :- write(Houses).
+writehouses([First|Rest],Count) :- write('House'), write(Count), write(': '), writeOneHouse(First), write('\n'), Count1 is Count + 1, writehouses(Rest,Count1).
+writeOneHouse([Color,Nat,Pet,Drink,Cigarette]) :- write(Color), write(' '),
+                                                  write(Nat), write(' '),
+                                                  write(Pet), write(' '),
+                                                  write(Drink), write(' '),
+                                                  write(Cigarette).
+
 
 
 
