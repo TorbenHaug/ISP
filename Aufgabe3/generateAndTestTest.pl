@@ -26,5 +26,23 @@
                                             [red, english, snake, milk, oldgold],
                                             [ivory, spanish, dog, orangejuice, luckystrike],
                                             [green, japan, zebra, coffee, parliament]]))).
+                                            
 
-einsteintest:-end_tests(test).
+:-end_tests(test).
+
+
+      
+%:-begin_tests(constrainTest).
+
+ %      test(const) :- assertion(solve_const([[yellow, norway, fox, water, kools],
+ %                                            [blue, ukraine, horse, tea, chesterfield],
+ %                                            [red, english, snake, milk, oldgold],
+ %                                            [ivory, spanish, dog, orangejuice, luckystrike],
+ %                                            [green, japan, zebra, coffee, parliament]])
+ %                                  =:= einsteintest([[yellow, norway, fox, water, kools],
+ %                                                    [blue, ukraine, horse, tea, chesterfield],
+ %                                                    [red, english, snake, milk, oldgold],
+ %                                                    [ivory, spanish, dog, orangejuice, luckystrike],
+ %                                                    [green, japan, zebra, coffee, parliament]])).
+
+%:-end_tests(constrainTest).

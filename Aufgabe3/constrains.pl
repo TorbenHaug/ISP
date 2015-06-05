@@ -1,8 +1,8 @@
 % Autor:
 % Datum: 03.06.2015
 :- use_module(library(clpfd)).
-:- use_module(library(apply)).
-solve_const :-
+
+solve_const(Out) :-
               Color = [Red, Green, Ivory, Blue, Yellow],
               Nationality = [English,Spanish,Ukraine,Norway,Japan],
               Pet = [Dog, Snake, Zebra, Fox, Horse],
@@ -45,11 +45,14 @@ solve_const :-
               label(Cigarette),
               
               sortByIndex(Color,[red, green, ivory, blue, yellow], ColorSorted),
-              sortByIndex(Nationality,[english,epanish,ukraine,norway,japan],NationalitySorted),
-              sortByIndex(Pet,[dog, snake, zebra, fox, horse],PetSorted),
-              sortByIndex(Drink,[tea, orangejuice, milk, water, coffee],DrinkSorted),
-              sortByIndex(Cigarette,[oldgold, kools, chesterfield, luckystrike, parliament],CigaretteSorted),
-              write_const(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted,1).
+              sortByIndex(Nationality,[english, epanish, ukraine, norway, japan], NationalitySorted),
+              sortByIndex(Pet, [dog, snake, zebra, fox, horse], PetSorted),
+              sortByIndex(Drink, [tea, orangejuice, milk, water, coffee], DrinkSorted),
+              sortByIndex(Cigarette, [oldgold, kools, chesterfield, luckystrike, parliament], CigaretteSorted),
+              
+              % chnages the structure to the structure like in file generateAndTest
+              structure(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted, _, _, Out1),
+              reverse(Out1, Out).
               
 sortByIndex(Index, Values, Goal) :-
               pairs_keys_values(KeyVal, Index, Values),
@@ -57,19 +60,26 @@ sortByIndex(Index, Values, Goal) :-
               pairs_values(KeyValSorted,Goal).
 
               
-structure([Color|ColorRest],
+structure(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted, _, Accu, Out) :-
+   structure_(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted, [], Accu, Out).
+
+structure_([], [], [], [], [], Out, _, Out).
+
+structure_([Color|ColorRest],
            [Nat|NationalityRest],
            [Pet|PetRest],
            [Drink|DrinkRest],
-           [Cigarette|CigaretteRest], Out) :-
-                append([Color, Nat, Pet, Drink, Cigarette], [Out], Out1),
-                structure(ColorRest,
+           [Cigarette|CigaretteRest], OldList, NewList, Out) :-
+                List = [Color, Nat, Pet, Drink, Cigarette],
+                NewList = [List|OldList],
+                structure_(ColorRest,
                             NationalityRest,
                             PetRest,
                             DrinkRest,
                             CigaretteRest,
-                            Out1
-                 ).
+                            NewList,
+                            _, Out).
+
                             
 write_const([Color|ColorRest],
            [Nat|NationalityRest],
@@ -91,7 +101,6 @@ write_const([Color|ColorRest],
                             PetRest,
                             DrinkRest,
                             CigaretteRest,
-                            Count1
-                 ).
+                            Count1).
 
 
