@@ -32,8 +32,8 @@ solve_const(Out) :-
               Kools = Yellow,
               Luckystrike = Orangejuice,
               Japan = Parliament,
-              
-              Green + 1 #= Ivory,
+
+              (Green - Ivory) #= 1,   % Green + 1 #= Ivory,
               abs(Chesterfield - Fox) #= 1,
               abs(Kools - Horse) #= 1,
               abs(Norway - Blue) #= 1,
@@ -45,7 +45,7 @@ solve_const(Out) :-
               label(Cigarette),
               
               sortByIndex(Color,[red, green, ivory, blue, yellow], ColorSorted),
-              sortByIndex(Nationality,[english, epanish, ukraine, norway, japan], NationalitySorted),
+              sortByIndex(Nationality,[english, spanish, ukraine, norway, japan], NationalitySorted),
               sortByIndex(Pet, [dog, snake, zebra, fox, horse], PetSorted),
               sortByIndex(Drink, [tea, orangejuice, milk, water, coffee], DrinkSorted),
               sortByIndex(Cigarette, [oldgold, kools, chesterfield, luckystrike, parliament], CigaretteSorted),
