@@ -32,7 +32,7 @@ cigarette(luckystrike).
 cigarette(parliament).
 
 
-solve :- einsteintest(Houses), generate(Houses), writehouses(Houses,1).
+solve :- einsteintest(Houses), generate(Houses), !, writehouses(Houses,1).
 
 %house(Used,Output)
 house(UsedInput,UsedOutput,[Color,Nationality,Pet,Drink,Cigarette]) :-

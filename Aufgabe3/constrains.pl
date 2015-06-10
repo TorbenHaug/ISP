@@ -1,7 +1,7 @@
 % Autor:
 % Datum: 03.06.2015
 :- use_module(library(clpfd)).
-
+solve_const :- solve_const(Out), !, writehouses(Out,1).
 solve_const(Out) :-
               Color = [Red, Green, Ivory, Blue, Yellow],
               Nationality = [English,Spanish,Ukraine,Norway,Japan],
@@ -80,7 +80,7 @@ structure_([Color|ColorRest],
                             NewList,
                             _, Out).
 
-                            
+%UNUSED
 write_const([Color|ColorRest],
            [Nat|NationalityRest],
            [Pet|PetRest],
