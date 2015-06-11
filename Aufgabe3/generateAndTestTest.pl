@@ -53,6 +53,6 @@
 :-begin_tests(compareBothFuncions).
 
  % compare generateAndTest function (generateAndTest.pl) with constrains funcrion (constrains.pl)
-  test(const) :- assertion(solve_const(O)), assertion((einsteintest(O), generate(O))).
+  test(const) :- assertion((solve_const(O), einsteintest(O), generate(O))).
 
 :-end_tests(compareBothFuncions).

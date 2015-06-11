@@ -32,7 +32,7 @@ cigarette(luckystrike).
 cigarette(parliament).
 
 
-solve :- einsteintest(Houses), generate(Houses), !, writehouses(Houses,1).
+solve :- einsteintest(Houses), generate(Houses), writehouses(Houses,1).
 
 %house(Used,Output)
 house(UsedInput,UsedOutput,[Color,Nationality,Pet,Drink,Cigarette]) :-
@@ -73,6 +73,7 @@ neighbour(HouseLeft,HouseRight,[HouseLeft,HouseRight|_]).
 neighbour(HouseLeft,HouseRight,[_|Rest]) :- neighbour(HouseLeft,HouseRight,Rest).
 
 writehouses([First|Rest],Count) :- write('House'), write(Count), write(': '), writeOneHouse(First), write('\n'), Count1 is Count + 1, writehouses(Rest,Count1).
+writehouses(_,6) :- true.
 writeOneHouse([Color,Nat,Pet,Drink,Cigarette]) :- write(Color), write(' '),
                                                   write(Nat), write(' '),
                                                   write(Pet), write(' '),

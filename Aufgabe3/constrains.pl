@@ -1,7 +1,7 @@
 % Autor:
 % Datum: 03.06.2015
 :- use_module(library(clpfd)).
-solve_const :- solve_const(Out), !, writehouses(Out,1).
+solve_const :- solve_const(Out), writehouses(Out,1).
 solve_const(Out) :-
               Color = [Red, Green, Ivory, Blue, Yellow],
               Nationality = [English,Spanish,Ukraine,Norway,Japan],
@@ -15,12 +15,6 @@ solve_const(Out) :-
               Drink ins 1..5,
               Cigarette ins 1..5,
 
-              all_different(Color),
-              all_different(Nationality),
-              all_different(Pet),
-              all_different(Drink),
-              all_different(Cigarette),
-
               Milk = 3,
               Norway = 1,
               
@@ -33,11 +27,17 @@ solve_const(Out) :-
               Luckystrike = Orangejuice,
               Japan = Parliament,
 
-              (Green - Ivory) #= 1,   % Green + 1 #= Ivory,
+              (Green - Ivory) #= 1,
               abs(Chesterfield - Fox) #= 1,
               abs(Kools - Horse) #= 1,
               abs(Norway - Blue) #= 1,
 
+              all_different(Color),
+              all_different(Nationality),
+              all_different(Pet),
+              all_different(Drink),
+              all_different(Cigarette),
+              
               label(Color),
               label(Nationality),
               label(Pet),
@@ -50,16 +50,32 @@ solve_const(Out) :-
               sortByIndex(Drink, [tea, orangejuice, milk, water, coffee], DrinkSorted),
               sortByIndex(Cigarette, [oldgold, kools, chesterfield, luckystrike, parliament], CigaretteSorted),
               
-              % chnages the structure to the structure like in file generateAndTest
-              structure(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted, _, _, Out1),
-              reverse(Out1, Out).
+              % changes the structure to the structure like in file generateAndTest
+              structure2(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted,Out).
+              %structure(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted,_,_,Out1),
+              %reverse(Out1, Out).
               
 sortByIndex(Index, Values, Goal) :-
               pairs_keys_values(KeyVal, Index, Values),
               sort(KeyVal,KeyValSorted),
               pairs_values(KeyValSorted,Goal).
 
-              
+structure2([Color|ColorRest],
+           [Nat|NationalityRest],
+           [Pet|PetRest],
+           [Drink|DrinkRest],
+           [Cigarette|CigaretteRest],
+           [[Color,Nat,Pet,Drink,Cigarette]|Out]):-
+                 structure2(ColorRest,NationalityRest,PetRest,DrinkRest,CigaretteRest,Out).
+structure2([], [], [], [], [],[]).
+
+
+
+
+
+
+
+%UNUSED
 structure(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted, _, Accu, Out) :-
    structure_(ColorSorted, NationalitySorted, PetSorted, DrinkSorted, CigaretteSorted, [], Accu, Out).
 
