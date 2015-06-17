@@ -4,6 +4,7 @@ package de.mill.enums;
  * Created by abq329 on 16.06.2015.
  */
 public enum Position {
+    Stock,
     P1,
     P2,
     P3,

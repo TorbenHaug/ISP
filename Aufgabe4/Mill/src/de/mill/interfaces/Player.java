@@ -14,4 +14,6 @@ public interface Player {
     public PlayerColor getColor();
 
     public Map<Stone,List<Position>> getPossibleMoves();
+
+    public int getCountOfStockStones();
 }
