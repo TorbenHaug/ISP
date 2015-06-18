@@ -2,13 +2,58 @@ package de.mill.model;
 
 import de.mill.exceptions.AlreadyAquiredException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by abq329 on 18.06.2015.
  */
 public class GameField {
+
+    private static Map<Integer, List<List<Integer>>> millMap = new HashMap<>();
+    static{
+        List<Integer> list1 = new ArrayList<>(Arrays.asList(0,1,2));
+        List<Integer> list2 = new ArrayList<>(Arrays.asList(3,4,5));
+        List<Integer> list3 = new ArrayList<>(Arrays.asList(6,7,8));
+        List<Integer> list4 = new ArrayList<>(Arrays.asList(9,10,11));
+        List<Integer> list5 = new ArrayList<>(Arrays.asList(12,13,14));
+        List<Integer> list6 = new ArrayList<>(Arrays.asList(15,16,17));
+        List<Integer> list7 = new ArrayList<>(Arrays.asList(18,19,20));
+        List<Integer> list8 = new ArrayList<>(Arrays.asList(21,22,23));
+        List<Integer> list9 = new ArrayList<>(Arrays.asList(0,9,21));
+        List<Integer> list10 = new ArrayList<>(Arrays.asList(3,10,18));
+        List<Integer> list11 = new ArrayList<>(Arrays.asList(6,11,15));
+        List<Integer> list12 = new ArrayList<>(Arrays.asList(1,4,7));
+        List<Integer> list13 = new ArrayList<>(Arrays.asList(16,19,22));
+        List<Integer> list14 = new ArrayList<>(Arrays.asList(8,12,17));
+        List<Integer> list15 = new ArrayList<>(Arrays.asList(5,13,20));
+        List<Integer> list16 = new ArrayList<>(Arrays.asList(2,14,23));
+
+        millMap.put(0, new ArrayList<>(Arrays.asList(list1, list9)));
+        millMap.put(1, new ArrayList<>(Arrays.asList(list1, list12)));
+        millMap.put(2, new ArrayList<>(Arrays.asList(list1, list16)));
+        millMap.put(3, new ArrayList<>(Arrays.asList(list2, list10)));
+        millMap.put(4, new ArrayList<>(Arrays.asList(list2, list12)));
+        millMap.put(5, new ArrayList<>(Arrays.asList(list2, list15)));
+        millMap.put(6, new ArrayList<>(Arrays.asList(list3, list11)));
+        millMap.put(7, new ArrayList<>(Arrays.asList(list3, list12)));
+        millMap.put(8, new ArrayList<>(Arrays.asList(list3, list14)));
+        millMap.put(9, new ArrayList<>(Arrays.asList(list4, list9)));
+        millMap.put(10, new ArrayList<>(Arrays.asList(list4, list10)));
+        millMap.put(11, new ArrayList<>(Arrays.asList(list4, list11)));
+        millMap.put(12, new ArrayList<>(Arrays.asList(list5, list14)));
+        millMap.put(13, new ArrayList<>(Arrays.asList(list5, list15)));
+        millMap.put(14, new ArrayList<>(Arrays.asList(list5, list16)));
+        millMap.put(15, new ArrayList<>(Arrays.asList(list6, list11)));
+        millMap.put(16, new ArrayList<>(Arrays.asList(list6, list13)));
+        millMap.put(17, new ArrayList<>(Arrays.asList(list6, list14)));
+        millMap.put(18, new ArrayList<>(Arrays.asList(list7, list10)));
+        millMap.put(19, new ArrayList<>(Arrays.asList(list7, list13)));
+        millMap.put(20, new ArrayList<>(Arrays.asList(list7, list15)));
+        millMap.put(21, new ArrayList<>(Arrays.asList(list8, list9)));
+        millMap.put(22, new ArrayList<>(Arrays.asList(list8, list13)));
+        millMap.put(23, new ArrayList<>(Arrays.asList(list8, list16)));
+
+    }
 
     private final Position[] gameField;
 
@@ -110,8 +155,15 @@ public class GameField {
         gameField[23].addNeighbour(gameField[22]);
     }
 
-    public void setStone(int pos, Stone stone) throws AlreadyAquiredException {
+
+    public boolean setStone(int pos, Stone stone) throws AlreadyAquiredException {
         gameField[pos].setAquiringStone(stone);
+        MillColor color = stone.COLOR;
+
+        boolean mill = isMill(millMap.get(pos), color);
+        System.out.println("Gibt es eine Muehle? " + mill);
+        return mill;
+
     }
 
     public List<MillColor> getFieldStatus(){
@@ -121,4 +173,26 @@ public class GameField {
         }
         return retVal;
     }
+
+    /*
+    * returns true if all of the elements of one of the elements of iList
+    * have the same color
+    * */
+    private boolean isMill(List<List<Integer>> iList, MillColor color){
+        // first element of a value of millMap
+        List<Integer> first = iList.get(0);
+        // second element of a value of millMap
+        List<Integer> second = iList.get(1);
+
+        // checks if all elements of one of the two lists have the same color
+        // if so it returns true
+        return (gameField[first.get(0)].getColor() == color
+             && gameField[first.get(1)].getColor() == color
+             && gameField[first.get(2)].getColor() == color)
+                ||  (gameField[second.get(0)].getColor() == color
+                  && gameField[second.get(1)].getColor() == color
+                  && gameField[second.get(2)].getColor() == color);
+    }
+
+
 }
