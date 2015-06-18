@@ -71,4 +71,8 @@ public class MillGame {
             currentPlayer.setState(PlayerState.Move);
         }
     }
+
+    public PlayerState getState(){
+        return currentPlayer.getState();
+    }
 }

@@ -1,8 +1,10 @@
 package de.mill.gui;
 
 import de.mill.exceptions.AlreadyAquiredException;
+import de.mill.interfaces.MessageReceiver;
 import de.mill.model.MillColor;
 import de.mill.model.MillGame;
+import de.mill.model.PlayerState;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,9 +34,10 @@ public class StoneButton extends JButton implements ActionListener {
 
     private final int pos;
     private final MillGame gameModel;
-
-    public StoneButton(int pos, MillGame gameModel){
+    private final MessageReceiver receiver;
+    public StoneButton(int pos, MillGame gameModel, MessageReceiver receiver){
         super(NON);
+        this.receiver = receiver;
         this.gameModel =  gameModel;
         this.pos = pos;
         setBackground(new Color(255, 255, 255, 0));
@@ -56,10 +59,17 @@ public class StoneButton extends JButton implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == this){
-            try {
-                gameModel.setStone(gameModel.getCurrentPlayer(), pos);
-            } catch (AlreadyAquiredException e1) {
-                System.out.println("Not allowed to set at pos: " + pos);
+            if(gameModel.getState() == PlayerState.Set) {
+                try {
+                    receiver.receiveMessage("Set " + gameModel.getCurrentPlayer().COLOR + " Stone to Position " + pos);
+                    gameModel.setStone(gameModel.getCurrentPlayer(), pos);
+                } catch (AlreadyAquiredException e1) {
+                    receiver.receiveMessage("Not allowed to set at pos: " + pos);
+                }
+            }else if(gameModel.getState() == PlayerState.Move){
+
+            }else if(gameModel.getState() == PlayerState.Remove){
+                
             }
         }
     }

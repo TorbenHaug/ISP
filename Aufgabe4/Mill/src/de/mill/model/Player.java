@@ -9,12 +9,12 @@ import java.util.Stack;
  * Created by abq329 on 18.06.2015.
  */
 public class Player {
-    private final MillColor color;
+    public final MillColor COLOR;
     private final Stack<Stone> stock = new Stack<>();
     private PlayerState state = PlayerState.Await;
 
     public Player(MillColor color){
-        this.color = color;
+        this.COLOR = color;
         for(int i=0; i < 9; i++){
             addStoneToStock(new Stone(color));
         }

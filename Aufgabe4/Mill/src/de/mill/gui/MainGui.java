@@ -1,5 +1,6 @@
 package de.mill.gui;
 
+import de.mill.interfaces.MessageReceiver;
 import de.mill.interfaces.Repaintable;
 import de.mill.model.MillColor;
 import de.mill.model.MillGame;
@@ -21,8 +22,15 @@ public class MainGui implements Repaintable {
     private final JPanel gamePanel;
     private final List<StoneButton> stoneButtons = new ArrayList<>();
     private final MillGame gameModel;
+    private final MessageReceiver receiver;
 
     public MainGui(MillGame gameModel){
+        this.receiver = new MessageReceiver() {
+            @Override
+            public void receiveMessage(String message) {
+                printMessage(message);
+            }
+        };
         this.gameModel = gameModel;
         mainWindow = new JFrame();
         mainWindow.setLayout(null);
@@ -44,7 +52,7 @@ public class MainGui implements Repaintable {
         mainWindow.add(gamePanel);
 
         for(int i=0; i< 24; i++){
-            StoneButton btn = new StoneButton(i, gameModel);
+            StoneButton btn = new StoneButton(i, gameModel, receiver);
             stoneButtons.add(btn);
             btn.setSize(55,55);
             btn.setLocation(0, 0);
@@ -88,5 +96,9 @@ public class MainGui implements Repaintable {
         while (it1.hasNext()){
             it2.next().setColor(it1.next());
         }
+    }
+
+    private void printMessage(String message){
+        System.out.println(message);
     }
 }
