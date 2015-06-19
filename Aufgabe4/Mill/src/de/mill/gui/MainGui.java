@@ -1,14 +1,12 @@
 package de.mill.gui;
 
 import de.mill.interfaces.MessageReceiver;
-import de.mill.interfaces.Repaintable;
+import de.mill.interfaces.Refresheable;
 import de.mill.model.MillColor;
 import de.mill.model.MillGame;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,40 +14,79 @@ import java.util.List;
 /**
  * Created by abq329 on 18.06.2015.
  */
-public class MainGui implements Repaintable {
+public class MainGui implements Refresheable {
     private final JFrame mainWindow;
-    private final JPanel menuPanel;
-    private final JPanel gamePanel;
+    private JPanel gamePanel;
     private final List<StoneButton> stoneButtons = new ArrayList<>();
-    private final MillGame gameModel;
+    private MillGame gameModel;
     private final MessageReceiver receiver;
+    private final JMenuBar menuBar;
+    private final JMenu startMenu;
+    private final JMenuItem pvp;
+    private final JMenuItem cvp;
+    private final JMenuItem pvc;
 
-    public MainGui(MillGame gameModel){
+    public MainGui(ActionListener pvpListener, ActionListener cvpListener, ActionListener pvcListener){
         this.receiver = new MessageReceiver() {
             @Override
             public void receiveMessage(String message) {
                 printMessage(message);
             }
         };
-        this.gameModel = gameModel;
         mainWindow = new JFrame();
         mainWindow.setLayout(null);
         mainWindow.setSize(700, 750);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        menuPanel = new JPanel();
-        menuPanel.setLayout(null);
-        menuPanel.setSize(600, 50);
-        menuPanel.setLocation(0, 0);
-        menuPanel.setBackground(Color.GREEN);
+        menuBar = new JMenuBar();
+        startMenu = new JMenu("Start");
+        pvp = new JMenuItem("Player vs. Player");
+        pvp.addActionListener(pvpListener);
+        startMenu.add(pvp);
+        cvp = new JMenuItem("Computer vs. Player");
+        cvp.addActionListener(cvpListener);
+        startMenu.add(cvp);
+        pvc = new JMenuItem("Player vs. Computer");
+        pvc.addActionListener(pvcListener);
+        startMenu.add(pvc);
+        menuBar.add(startMenu);
+        mainWindow.setJMenuBar(menuBar);
 
+
+
+        mainWindow.setVisible(true);
+    }
+
+    @Override
+    public void refresh() {
+        Iterator<MillColor> it1 = gameModel.getCurrentField().iterator();
+        Iterator<StoneButton> it2 = stoneButtons.iterator();
+
+        while (it1.hasNext()){
+            it2.next().setColor(it1.next());
+        }
+    }
+
+    private void printMessage(String message){
+        System.out.println(message);
+    }
+
+    public void setGameModel(MillGame gameModel){
+        this.gameModel = gameModel;
+        initGame();
+        refresh();
+    }
+
+    void initGame(){
+        if(!(gamePanel == null)) {
+            mainWindow.remove(gamePanel);
+        }
         gamePanel = new GamePanel();
         gamePanel.setLayout(null);
         gamePanel.setSize(600, 600);
         gamePanel.setLocation(0, 50);
+        stoneButtons.clear();
 
-        mainWindow.add(menuPanel);
-        mainWindow.add(gamePanel);
 
         for(int i=0; i< 24; i++){
             StoneButton btn = new StoneButton(i, gameModel, receiver);
@@ -84,21 +121,7 @@ public class MainGui implements Repaintable {
         stoneButtons.get(21).setLocation(0,(600 - 55));;
         stoneButtons.get(22).setLocation((600/2 - 55/2),(600 - 55));;
         stoneButtons.get(23).setLocation((600 - 55),(600 - 55));
-
-        mainWindow.setVisible(true);
-    }
-
-    @Override
-    public void rePaint() {
-        Iterator<MillColor> it1 = gameModel.getCurrentField().iterator();
-        Iterator<StoneButton> it2 = stoneButtons.iterator();
-
-        while (it1.hasNext()){
-            it2.next().setColor(it1.next());
-        }
-    }
-
-    private void printMessage(String message){
-        System.out.println(message);
+        mainWindow.repaint();
+        mainWindow.add(gamePanel);
     }
 }

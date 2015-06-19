@@ -1,10 +1,7 @@
 package de.mill.model;
 
-import de.mill.exceptions.AlreadyAquiredException;
-import de.mill.exceptions.MoveNotAllowedException;
-import de.mill.exceptions.UnableToRemoveStoneException;
-import de.mill.exceptions.WrongStateException;
-import de.mill.interfaces.Repaintable;
+import de.mill.exceptions.*;
+import de.mill.interfaces.Refresheable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +9,11 @@ import java.util.List;
 
 public class MillGame {
     private GameField gameField = new GameField();
-    private List<Repaintable> repaintables = new ArrayList<>();
+    private List<Refresheable> refresheables = new ArrayList<>();
     private final Player player1;
     private final Player player2;
     private Player currentPlayer;
+    private GameState gameState = GameState.Running;
 
     public MillGame(Player player1, Player player2){
         this.player1 = player1;
@@ -25,6 +23,7 @@ public class MillGame {
     }
 
     public void setStone(Player player, int pos) throws AlreadyAquiredException, WrongStateException {
+        checkRunning();
         if(player.getState() == PlayerState.Set) {
             Stone stone = player.getStoneFromStock();
             try {
@@ -46,6 +45,7 @@ public class MillGame {
     }
 
     public void removeStone(Player player, int pos) throws UnableToRemoveStoneException {
+        checkRunning();
         if (player.getState() == PlayerState.Remove){
             MillColor colorAtPos = gameField.getColorFor(pos);
             if(!(colorAtPos == MillColor.Non) &&
@@ -54,6 +54,11 @@ public class MillGame {
                 getOpponent().removeFromFieldList(gameField.removeStone(pos));
                 currentPlayer.setState(PlayerState.Await);
                 switchPlayer();
+                if (currentPlayer.stonesInGame() < 3){
+                    gameState = GameState.Finished;
+                    getCurrentPlayer().setState(PlayerState.Loose);
+                    getOpponent().setState(PlayerState.Win);
+                }
                 anounceRepaintable();
             }else{
                 throw new UnableToRemoveStoneException();
@@ -61,6 +66,12 @@ public class MillGame {
 
         }else {
             throw new WrongStateException();
+        }
+    }
+
+    private void checkRunning() {
+        if (gameState == GameState.Finished){
+            throw new FinishedGameException();
         }
     }
 
@@ -80,13 +91,13 @@ public class MillGame {
         return gameField.getFieldStatus();
     }
 
-    public void addRepaintable(Repaintable repaintable){
-        repaintables.add(repaintable);
+    public void addRepaintable(Refresheable refresheable){
+        refresheables.add(refresheable);
     }
 
     private void anounceRepaintable(){
-        for(Repaintable repaintable: repaintables){
-            repaintable.rePaint();
+        for(Refresheable refresheable : refresheables){
+            refresheable.refresh();
         }
     }
 
@@ -110,6 +121,7 @@ public class MillGame {
     }
 
     public void moveStone(Player player, int from, int to) throws MoveNotAllowedException {
+        checkRunning();
         if(gameField.getColorFor(from) == player.COLOR && (gameField.isNeighbour(from,to) || player.stonesInGame() == 3)){
             try {
                 gameField.moveStone(from, to);

@@ -7,5 +7,5 @@ public enum PlayerState {
     Await,
     Set,
     Move,
-    Remove;
+    Remove, Loose, Win;
 }
