@@ -1,6 +1,7 @@
 package de.mill.model;
 
 import de.mill.exceptions.AlreadyAquiredException;
+import de.mill.exceptions.MoveNotAllowedException;
 
 import java.util.*;
 
@@ -210,4 +211,19 @@ public class GameField {
     public MillColor getColorFor(int pos){
         return gameField[pos].getColor();
     }
+
+    public void moveStone(int from, int to) throws MoveNotAllowedException {
+        try {
+            gameField[to].setAquiringStone(gameField[from].getAquiringStone());
+            gameField[from].setAquiringStone(new Stone(MillColor.Non));
+        } catch (AlreadyAquiredException e) {
+            throw new MoveNotAllowedException();
+        }
+
+    }
+
+    boolean isNeighbour(int pos1, int pos2){
+        return gameField[pos1].isNeigbour(gameField[pos2]);
+    }
+
 }

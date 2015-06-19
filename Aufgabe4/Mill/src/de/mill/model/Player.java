@@ -49,4 +49,8 @@ public class Player {
     public PlayerState getState(){
         return state;
     }
+
+    public int stonesInGame(){
+        return stock.size() + onField.size();
+    }
 }

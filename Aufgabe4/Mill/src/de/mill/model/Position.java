@@ -34,4 +34,7 @@ public class Position {
     public MillColor getColor() {
         return aquiringStone.COLOR;
     }
+    public boolean isNeigbour(Position position){
+        return neighbours.contains(position);
+    }
 }

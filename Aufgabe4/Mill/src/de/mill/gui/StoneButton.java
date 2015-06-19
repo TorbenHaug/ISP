@@ -1,6 +1,7 @@
 package de.mill.gui;
 
 import de.mill.exceptions.AlreadyAquiredException;
+import de.mill.exceptions.MoveNotAllowedException;
 import de.mill.exceptions.UnableToRemoveStoneException;
 import de.mill.interfaces.MessageReceiver;
 import de.mill.model.MillColor;
@@ -22,6 +23,7 @@ public class StoneButton extends JButton implements ActionListener {
     private static ImageIcon WHITE;
     private static ImageIcon BLACK;
     private static ImageIcon NON;
+    private static int moveFrom = -1;
 
     static{
         try {
@@ -68,7 +70,19 @@ public class StoneButton extends JButton implements ActionListener {
                     receiver.receiveMessage("Not allowed to set at pos: " + pos);
                 }
             }else if(gameModel.getState() == PlayerState.Move){
-
+                if (moveFrom == -1){
+                    moveFrom = pos;
+                }else if (moveFrom == pos){
+                    moveFrom = -1;
+                }else {
+                    try {
+                        receiver.receiveMessage("Move Stone from " + moveFrom + " Stone to Position " + pos);
+                        gameModel.moveStone(gameModel.getCurrentPlayer(),moveFrom,pos);
+                    } catch (MoveNotAllowedException e1) {
+                        receiver.receiveMessage("Move Stone from " + moveFrom + " Stone to Position " + pos + " not allowed;");
+                    }
+                    moveFrom = -1;
+                }
             }else if(gameModel.getState() == PlayerState.Remove){
                 try {
                     receiver.receiveMessage("Remove Stone from Position " + pos);
