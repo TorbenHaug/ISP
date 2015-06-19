@@ -64,7 +64,7 @@ public class GameField {
 
     private void initGameField() {
         for(int i = 0; i < 24; i++){
-            gameField[i] = new Position();
+            gameField[i] = new Position(i);
         }
         gameField[0].addNeighbour(gameField[1]);
         gameField[0].addNeighbour(gameField[9]);
@@ -156,14 +156,8 @@ public class GameField {
     }
 
 
-    public boolean setStone(int pos, Stone stone) throws AlreadyAquiredException {
+    public void setStone(int pos, Stone stone) throws AlreadyAquiredException {
         gameField[pos].setAquiringStone(stone);
-        MillColor color = stone.COLOR;
-
-        boolean mill = isMill(millMap.get(pos), color);
-        System.out.println("Gibt es eine Muehle? " + mill);
-        return mill;
-
     }
 
     public List<MillColor> getFieldStatus(){
@@ -178,7 +172,8 @@ public class GameField {
     * returns true if all of the elements of one of the elements of iList
     * have the same color
     * */
-    private boolean isMill(List<List<Integer>> iList, MillColor color){
+    public boolean isMill(int pos){
+        List<List<Integer>> iList = millMap.get(pos);
         // first element of a value of millMap
         List<Integer> first = iList.get(0);
         // second element of a value of millMap
@@ -186,13 +181,33 @@ public class GameField {
 
         // checks if all elements of one of the two lists have the same color
         // if so it returns true
-        return (gameField[first.get(0)].getColor() == color
-             && gameField[first.get(1)].getColor() == color
-             && gameField[first.get(2)].getColor() == color)
-                ||  (gameField[second.get(0)].getColor() == color
-                  && gameField[second.get(1)].getColor() == color
-                  && gameField[second.get(2)].getColor() == color);
+        return ((gameField[first.get(0)].getColor() ==  gameField[first.get(1)].getColor()
+              && gameField[first.get(1)].getColor() == gameField[first.get(2)].getColor())
+              ||(gameField[second.get(0)].getColor() == gameField[second.get(1)].getColor()
+              && gameField[second.get(2)].getColor() == gameField[second.get(1)].getColor()));
     }
 
 
+    public Stone removeStone(int pos) {
+        Stone stone = gameField[pos].getAquiringStone();
+        stone.setPosition(null);
+        try {
+            gameField[pos].setAquiringStone(new Stone(MillColor.Non));
+        } catch (AlreadyAquiredException e) {
+
+        }
+        return stone;
+    }
+
+    public boolean isOneStoneNotInMill(List<Stone> stones){
+        for (Stone stone: stones){
+            if (stone.getPosition() != null && !isMill(stone.getPosition().ID)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public MillColor getColorFor(int pos){
+        return gameField[pos].getColor();
+    }
 }

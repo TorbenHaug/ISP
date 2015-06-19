@@ -1,6 +1,7 @@
 package de.mill.gui;
 
 import de.mill.exceptions.AlreadyAquiredException;
+import de.mill.exceptions.UnableToRemoveStoneException;
 import de.mill.interfaces.MessageReceiver;
 import de.mill.model.MillColor;
 import de.mill.model.MillGame;
@@ -69,7 +70,12 @@ public class StoneButton extends JButton implements ActionListener {
             }else if(gameModel.getState() == PlayerState.Move){
 
             }else if(gameModel.getState() == PlayerState.Remove){
-                
+                try {
+                    receiver.receiveMessage("Remove Stone from Position " + pos);
+                    gameModel.removeStone(gameModel.getCurrentPlayer(), pos);
+                } catch (UnableToRemoveStoneException e1) {
+                    receiver.receiveMessage("Not allowed to remove at pos: " + pos);
+                }
             }
         }
     }

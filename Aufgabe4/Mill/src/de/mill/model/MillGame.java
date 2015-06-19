@@ -1,6 +1,7 @@
 package de.mill.model;
 
 import de.mill.exceptions.AlreadyAquiredException;
+import de.mill.exceptions.UnableToRemoveStoneException;
 import de.mill.exceptions.WrongStateException;
 import de.mill.interfaces.Repaintable;
 
@@ -27,7 +28,11 @@ public class MillGame {
             Stone stone = player.getStoneFromStock();
             try {
                 gameField.setStone(pos, stone);
-                switchPlayer();
+                if(gameField.isMill(pos)){
+                    currentPlayer.setState(PlayerState.Remove);
+                }else {
+                    switchPlayer();
+                }
             } catch (AlreadyAquiredException e) {
                 player.addStoneToStock(stone);
                 throw e;
@@ -36,6 +41,31 @@ public class MillGame {
             }
         }else{
             throw new WrongStateException();
+        }
+    }
+
+    public void removeStone(Player player, int pos) throws UnableToRemoveStoneException {
+        if (player.getState() == PlayerState.Remove){
+            MillColor colorAtPos = gameField.getColorFor(pos);
+            if(!(colorAtPos == MillColor.Non || colorAtPos == currentPlayer.COLOR || (gameField.isMill(pos) && !(gameField.isOneStoneNotInMill(getOpponent().getStonesOnField()))))){
+                getOpponent().removeFromFieldList(gameField.removeStone(pos));
+                currentPlayer.setState(PlayerState.Await);
+                switchPlayer();
+                anounceRepaintable();
+            }else{
+                throw new UnableToRemoveStoneException();
+            }
+
+        }else {
+            throw new WrongStateException();
+        }
+    }
+
+    public Player getOpponent() {
+        if (currentPlayer == player1){
+            return  player2;
+        }else{
+            return player1;
         }
     }
 

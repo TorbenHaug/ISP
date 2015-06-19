@@ -11,6 +11,7 @@ import java.util.Stack;
 public class Player {
     public final MillColor COLOR;
     private final Stack<Stone> stock = new Stack<>();
+    private final ArrayList<Stone> onField = new ArrayList<>();
     private PlayerState state = PlayerState.Await;
 
     public Player(MillColor color){
@@ -24,11 +25,22 @@ public class Player {
     }
 
     Stone getStoneFromStock(){
-        return stock.pop();
+        Stone stone = stock.pop();
+        onField.add(stone);
+        return stone;
     }
 
     void addStoneToStock(Stone stone){
+        onField.remove(stone);
         stock.push(stone);
+    }
+
+    void removeFromFieldList(Stone stone){
+        onField.remove(stone);
+    }
+
+    List<Stone> getStonesOnField(){
+        return onField;
     }
 
     void setState(PlayerState state) {
