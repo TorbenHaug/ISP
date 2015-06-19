@@ -4,6 +4,7 @@ import de.mill.exceptions.AlreadyAquiredException;
 import de.mill.exceptions.MoveNotAllowedException;
 import de.mill.exceptions.UnableToRemoveStoneException;
 import de.mill.interfaces.MessageReceiver;
+import de.mill.model.GameState;
 import de.mill.model.MillColor;
 import de.mill.model.MillGame;
 import de.mill.model.PlayerState;
@@ -14,6 +15,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 /**
@@ -24,6 +27,9 @@ public class StoneButton extends JButton implements ActionListener {
     private static ImageIcon BLACK;
     private static ImageIcon NON;
     private static int moveFrom = -1;
+    private static final Border noBorder = BorderFactory.createEmptyBorder();
+    private static final Border mouseoverBorder = BorderFactory.createLineBorder(Color.RED);
+    private static final Border selectedBorder = BorderFactory.createLineBorder(Color.BLUE);
 
     static{
         try {
@@ -38,6 +44,7 @@ public class StoneButton extends JButton implements ActionListener {
     private final int pos;
     private final MillGame gameModel;
     private final MessageReceiver receiver;
+    private Border tmpBorder;
     public StoneButton(int pos, MillGame gameModel, MessageReceiver receiver){
         super(NON);
         this.receiver = receiver;
@@ -46,10 +53,27 @@ public class StoneButton extends JButton implements ActionListener {
         setBackground(new Color(255, 255, 255, 0));
         setOpaque(false);
         addActionListener(this);
-        this.setBorder(BorderFactory.createEmptyBorder());
+        this.setBorder(noBorder);
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((StoneButton) e.getSource()).setBorder(tmpBorder);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                tmpBorder = ((StoneButton) e.getSource()).getBorder();
+                ((StoneButton) e.getSource()).setBorder(mouseoverBorder);
+            }
+        });
     }
 
     public void setColor(MillColor color){
+        if(pos == moveFrom)
+            this.setBorder(selectedBorder);
+        else
+            this.setBorder(noBorder);
+
         if(color == MillColor.Black)
             this.setIcon(BLACK);
         else if(color == MillColor.White)
@@ -61,29 +85,36 @@ public class StoneButton extends JButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == this){
-            if(gameModel.getState() == PlayerState.Set) {
+        if(e.getSource() == this && gameModel.getGameState() != GameState.Finished){
+            if(gameModel.getPlayerState() == PlayerState.Set) {
                 try {
                     receiver.receiveMessage("Set " + gameModel.getCurrentPlayer().COLOR + " Stone to Position " + pos);
                     gameModel.setStone(gameModel.getCurrentPlayer(), pos);
                 } catch (AlreadyAquiredException e1) {
                     receiver.receiveMessage("Not allowed to set at pos: " + pos);
                 }
-            }else if(gameModel.getState() == PlayerState.Move){
+            }else if(gameModel.getPlayerState() == PlayerState.Move){
                 if (moveFrom == -1){
                     moveFrom = pos;
+                    setBorder(selectedBorder);
+                    tmpBorder = selectedBorder;
                 }else if (moveFrom == pos){
                     moveFrom = -1;
+                    setBorder(mouseoverBorder);
+                    tmpBorder = noBorder;
                 }else {
+                    int tmpMoveFrom = moveFrom;
                     try {
-                        receiver.receiveMessage("Move Stone from " + moveFrom + " Stone to Position " + pos);
-                        gameModel.moveStone(gameModel.getCurrentPlayer(),moveFrom,pos);
+                        moveFrom = -1;
+                        receiver.receiveMessage("Move Stone from " + tmpMoveFrom + " Stone to Position " + pos);
+                        gameModel.moveStone(gameModel.getCurrentPlayer(),tmpMoveFrom,pos);
                     } catch (MoveNotAllowedException e1) {
+                        moveFrom = tmpMoveFrom;
                         receiver.receiveMessage("Move Stone from " + moveFrom + " Stone to Position " + pos + " not allowed;");
                     }
-                    moveFrom = -1;
+
                 }
-            }else if(gameModel.getState() == PlayerState.Remove){
+            }else if(gameModel.getPlayerState() == PlayerState.Remove){
                 try {
                     receiver.receiveMessage("Remove Stone from Position " + pos);
                     gameModel.removeStone(gameModel.getCurrentPlayer(), pos);

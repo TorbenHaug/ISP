@@ -116,8 +116,12 @@ public class MillGame {
         }
     }
 
-    public PlayerState getState(){
+    public PlayerState getPlayerState(){
         return currentPlayer.getState();
+    }
+
+    public GameState getGameState(){
+        return gameState;
     }
 
     public void moveStone(Player player, int from, int to) throws MoveNotAllowedException {
