@@ -19,6 +19,7 @@ import java.util.List;
 public class MainGui implements Refresheable {
     private final JFrame mainWindow;
     private JPanel gamePanel;
+    private StatisticsPanel statisticsPanel;
     private final List<StoneButton> stoneButtons = new ArrayList<>();
     private MillGame gameModel;
     private final MessageReceiver receiver;
@@ -39,7 +40,8 @@ public class MainGui implements Refresheable {
         };
         mainWindow = new JFrame();
         mainWindow.setLayout(null);
-        mainWindow.setSize(670, 670);
+        mainWindow.setSize(960, 670);
+        mainWindow.setResizable(false);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         menuBar = new JMenuBar();
@@ -69,6 +71,11 @@ public class MainGui implements Refresheable {
         while (it1.hasNext()){
             it2.next().setColor(it1.next());
         }
+
+        if(statisticsPanel != null){
+            statisticsPanel.setCurrentPlayerName(gameModel.getCurrentPlayer().NAME);
+            statisticsPanel.setCurrentPlayerState(gameModel.getPlayerState().toString());
+        }
     }
 
     private void printMessage(String message){
@@ -85,10 +92,14 @@ public class MainGui implements Refresheable {
         if(!(gamePanel == null)) {
             mainWindow.remove(gamePanel);
         }
+        if(!(statisticsPanel == null)){
+            mainWindow.remove(statisticsPanel);
+        }
         gamePanel = new GamePanel();
         gamePanel.setLayout(null);
         gamePanel.setSize(600, 600);
         gamePanel.setLocation(10, 10);
+        gamePanel.setBorder(BorderFactory.createBevelBorder(0));
         gamePanel.setBackground(gameBackgroundColor);
         stoneButtons.clear();
 
@@ -126,7 +137,14 @@ public class MainGui implements Refresheable {
         stoneButtons.get(21).setLocation(4,555);;
         stoneButtons.get(22).setLocation(284,555);;
         stoneButtons.get(23).setLocation(555,555);
-        mainWindow.repaint();
+
+        statisticsPanel = new StatisticsPanel();
+        statisticsPanel.setLocation(630, 10);
+        statisticsPanel.setBorder(BorderFactory.createBevelBorder(0));
+        statisticsPanel.setBackground(gameBackgroundColor);
+
+        mainWindow.add(statisticsPanel);
         mainWindow.add(gamePanel);
+        mainWindow.repaint();
     }
 }
