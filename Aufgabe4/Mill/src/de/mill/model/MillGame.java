@@ -26,6 +26,19 @@ public class MillGame {
         currentPlayer = player1;
     }
 
+    public MillGame(MillGame millGame){
+        this.gameField = new GameField(millGame.gameField);
+        this.player1 = new Player(millGame.player1);
+        this.player2 = new Player(millGame.player2);
+        if (millGame.currentPlayer == millGame.player1){
+            this.currentPlayer = this.player1;
+        }else{
+            this.currentPlayer = this.player2;
+        }
+        this.gameState = millGame.gameState;
+
+    }
+
     public void setStone(Player player, int pos) throws AlreadyAquiredException, WrongStateException {
         checkRunning();
         if(player.getState() == PlayerState.Set) {

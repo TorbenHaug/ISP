@@ -165,6 +165,10 @@ public class GameField {
         initGameField();
     }
 
+    public GameField(GameField gameField){
+        this.gameField = Arrays.copyOf(gameField.gameField, gameField.gameField.length);
+    }
+
     private void initGameField() {
         for(int i = 0; i < 24; i++){
             gameField[i] = MillColor.Non;
@@ -180,11 +184,6 @@ public class GameField {
     }
 
     public List<MillColor> getFieldStatus(){
-//        List<MillColor> retVal = new ArrayList<>();
-//        for(Stone stone: gameField){
-//            retVal.add(stone.COLOR);
-//        }
-//        return retVal;
         return Arrays.asList(gameField);
     }
 
