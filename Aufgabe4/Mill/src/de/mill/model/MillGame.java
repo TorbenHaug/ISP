@@ -1,5 +1,8 @@
 package de.mill.model;
 
+import de.mill.enums.GameState;
+import de.mill.enums.MillColor;
+import de.mill.enums.PlayerState;
 import de.mill.exceptions.*;
 import de.mill.interfaces.Refresheable;
 

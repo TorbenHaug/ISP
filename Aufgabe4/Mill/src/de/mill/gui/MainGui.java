@@ -2,11 +2,10 @@ package de.mill.gui;
 
 import de.mill.interfaces.MessageReceiver;
 import de.mill.interfaces.Refresheable;
-import de.mill.model.MillColor;
+import de.mill.enums.MillColor;
 import de.mill.model.MillGame;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

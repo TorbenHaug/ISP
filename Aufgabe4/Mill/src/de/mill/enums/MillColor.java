@@ -1,4 +1,4 @@
-package de.mill.model;
+package de.mill.enums;
 
 /**
  * Created by abq329 on 18.06.2015.

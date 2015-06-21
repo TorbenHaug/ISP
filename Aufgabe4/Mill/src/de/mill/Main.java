@@ -1,7 +1,7 @@
 package de.mill;
 
 import de.mill.gui.MainGui;
-import de.mill.model.MillColor;
+import de.mill.enums.MillColor;
 import de.mill.model.MillGame;
 import de.mill.model.Player;
 

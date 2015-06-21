@@ -1,7 +1,9 @@
 package de.mill.model;
 
+import de.mill.enums.MillColor;
+import de.mill.enums.PlayerState;
+
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 

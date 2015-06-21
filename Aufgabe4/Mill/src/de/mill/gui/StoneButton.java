@@ -4,10 +4,10 @@ import de.mill.exceptions.AlreadyAquiredException;
 import de.mill.exceptions.MoveNotAllowedException;
 import de.mill.exceptions.UnableToRemoveStoneException;
 import de.mill.interfaces.MessageReceiver;
-import de.mill.model.GameState;
-import de.mill.model.MillColor;
+import de.mill.enums.GameState;
+import de.mill.enums.MillColor;
 import de.mill.model.MillGame;
-import de.mill.model.PlayerState;
+import de.mill.enums.PlayerState;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

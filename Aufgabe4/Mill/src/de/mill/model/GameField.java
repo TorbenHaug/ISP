@@ -1,5 +1,6 @@
 package de.mill.model;
 
+import de.mill.enums.MillColor;
 import de.mill.exceptions.AlreadyAquiredException;
 import de.mill.exceptions.MoveNotAllowedException;
 
@@ -157,28 +158,33 @@ public class GameField {
     }
 
 
-    private final Position[] gameField;
+    private final Stone[] gameField;
 
     public GameField(){
-        gameField = new Position[24];
+        gameField = new Stone[24];
         initGameField();
     }
 
     private void initGameField() {
         for(int i = 0; i < 24; i++){
-            gameField[i] = new Position(i);
+            gameField[i] = new Stone(MillColor.Non,i);
         }
     }
 
-
     public void setStone(int pos, Stone stone) throws AlreadyAquiredException {
-        gameField[pos].setAquiringStone(stone);
+        Stone aquiringStone = gameField[pos];
+        if(aquiringStone.COLOR == MillColor.Non || stone.COLOR == MillColor.Non) {
+            gameField[pos] = stone;
+            gameField[pos].setPosition(pos);
+        }else {
+            throw new AlreadyAquiredException();
+        }
     }
 
     public List<MillColor> getFieldStatus(){
         List<MillColor> retVal = new ArrayList<>();
-        for(Position position: gameField){
-            retVal.add(position.getColor());
+        for(Stone stone: gameField){
+            retVal.add(stone.COLOR);
         }
         return retVal;
     }
@@ -196,18 +202,18 @@ public class GameField {
 
         // checks if all elements of one of the two lists have the same color
         // if so it returns true
-        return ((gameField[first.get(0)].getColor() ==  gameField[first.get(1)].getColor()
-              && gameField[first.get(1)].getColor() == gameField[first.get(2)].getColor())
-              ||(gameField[second.get(0)].getColor() == gameField[second.get(1)].getColor()
-              && gameField[second.get(2)].getColor() == gameField[second.get(1)].getColor()));
+        return ((gameField[first.get(0)].COLOR ==  gameField[first.get(1)].COLOR
+              && gameField[first.get(1)].COLOR == gameField[first.get(2)].COLOR)
+              ||(gameField[second.get(0)].COLOR == gameField[second.get(1)].COLOR
+              && gameField[second.get(2)].COLOR == gameField[second.get(1)].COLOR));
     }
 
 
     public Stone removeStone(int pos) {
-        Stone stone = gameField[pos].getAquiringStone();
+        Stone stone = gameField[pos];
         stone.setPosition(-1);
         try {
-            gameField[pos].setAquiringStone(new Stone(MillColor.Non));
+            setStone(pos, new Stone(MillColor.Non, pos));
         } catch (AlreadyAquiredException e) {
 
         }
@@ -223,21 +229,18 @@ public class GameField {
         return false;
     }
     public MillColor getColorFor(int pos){
-        return gameField[pos].getColor();
+        return gameField[pos].COLOR;
     }
 
     public void moveStone(int from, int to) throws MoveNotAllowedException {
         try {
-            gameField[to].setAquiringStone(gameField[from].getAquiringStone());
-            gameField[from].setAquiringStone(new Stone(MillColor.Non));
+            setStone(to, gameField[from]);
+            setStone(from, new Stone(MillColor.Non, from));
         } catch (AlreadyAquiredException e) {
             throw new MoveNotAllowedException();
         }
 
     }
 
-//    boolean isNeighbour(int pos1, int pos2){
-//        return isNeighbours(pos1, pos2);
-//    }
 
 }
