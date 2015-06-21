@@ -13,37 +13,35 @@ import java.util.Stack;
 public class Player {
     public final String NAME;
     public final MillColor COLOR;
-    private final Stack<Stone> stock = new Stack<>();
-    private final ArrayList<Stone> onField = new ArrayList<>();
+    private int stock;
+    private final ArrayList<Integer> onField = new ArrayList<>();
     private PlayerState state = PlayerState.Await;
 
     public Player(MillColor color, String name){
+        this.stock = 9;
         this.NAME = name;
         this.COLOR = color;
-        for(int i=0; i < 9; i++){
-            addStoneToStock(new Stone(color));
-        }
     }
-    public boolean hasStonsInStock(){
-        return stock.size() > 0;
+    public boolean hasStoneInStock(){
+        return stock > 0;
     }
 
-    Stone getStoneFromStock(){
-        Stone stone = stock.pop();
-        onField.add(stone);
-        return stone;
+    MillColor getStoneFromStock(){
+        stock--;
+        //Stone stone = new Stone(COLOR);
+        return COLOR;
     }
 
-    void addStoneToStock(Stone stone){
+    void addStoneToStock(Integer stone){
         onField.remove(stone);
-        stock.push(stone);
+        stock++;
     }
 
-    void removeFromFieldList(Stone stone){
+    void removeFromFieldList(Integer stone){
         onField.remove(stone);
     }
 
-    List<Stone> getStonesOnField(){
+    List<Integer> getStonesOnField(){
         return onField;
     }
 
@@ -55,6 +53,10 @@ public class Player {
     }
 
     public int stonesInGame(){
-        return stock.size() + onField.size();
+        return stock + onField.size();
+    }
+
+    public void addStoneToField(int pos) {
+        onField.add(pos);
     }
 }

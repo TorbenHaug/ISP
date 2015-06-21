@@ -11,14 +11,15 @@ import java.util.List;
 
 
 public class MillGame {
-    private GameField gameField = new GameField();
-    private List<Refresheable> refresheables = new ArrayList<>();
+    private final GameField gameField;
+    private final List<Refresheable> refresheables = new ArrayList<>();
     private final Player player1;
     private final Player player2;
     private Player currentPlayer;
     private GameState gameState = GameState.Running;
 
     public MillGame(Player player1, Player player2){
+        this.gameField = new GameField();
         this.player1 = player1;
         this.player2 = player2;
         player1.setState(PlayerState.Set);
@@ -28,16 +29,17 @@ public class MillGame {
     public void setStone(Player player, int pos) throws AlreadyAquiredException, WrongStateException {
         checkRunning();
         if(player.getState() == PlayerState.Set) {
-            Stone stone = player.getStoneFromStock();
+            MillColor stone = player.getStoneFromStock();
             try {
                 gameField.setStone(pos, stone);
+                player.addStoneToField(pos);
                 if(gameField.isMill(pos)){
                     currentPlayer.setState(PlayerState.Remove);
                 }else {
                     switchPlayer();
                 }
             } catch (AlreadyAquiredException e) {
-                player.addStoneToStock(stone);
+                player.addStoneToStock(pos);
                 throw e;
             } finally {
                 anounceRepaintable();
@@ -54,7 +56,8 @@ public class MillGame {
             if(!(colorAtPos == MillColor.Non) &&
                     !(colorAtPos == currentPlayer.COLOR) &&
                     (!gameField.isMill(pos) || !(gameField.isOneStoneNotInMill(getOpponent().getStonesOnField())))){
-                getOpponent().removeFromFieldList(gameField.removeStone(pos));
+                gameField.removeStone(pos);
+                getOpponent().removeFromFieldList(pos);
                 currentPlayer.setState(PlayerState.Await);
                 switchPlayer();
                 if (currentPlayer.stonesInGame() < 3){
@@ -112,7 +115,7 @@ public class MillGame {
             currentPlayer = player1;
         }
 
-        if(currentPlayer.hasStonsInStock()){
+        if(currentPlayer.hasStoneInStock()){
             currentPlayer.setState(PlayerState.Set);
         }else{
             currentPlayer.setState(PlayerState.Move);
@@ -135,6 +138,8 @@ public class MillGame {
             } catch (MoveNotAllowedException e) {
                 throw e;
             }
+            player.removeFromFieldList(from);
+            player.addStoneToField(to);
             if(gameField.isMill(to)){
                 currentPlayer.setState(PlayerState.Remove);
             }else {
