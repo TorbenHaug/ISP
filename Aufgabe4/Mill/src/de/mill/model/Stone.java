@@ -6,17 +6,17 @@ package de.mill.model;
 public class Stone {
     public final MillColor COLOR;
 
-    private Position position;
+    private int position = -1;
 
     public Stone(MillColor color){
         this.COLOR = color;
     }
 
-    public Position getPosition() {
+    public int getPosition() {
         return position;
     }
 
-    void setPosition(Position position) {
+    void setPosition(int position) {
         this.position = position;
     }
 }

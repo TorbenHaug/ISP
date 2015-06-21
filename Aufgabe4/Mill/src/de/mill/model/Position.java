@@ -10,19 +10,15 @@ import java.util.List;
  */
 public class Position {
     public final int ID;
-    private final List<Position> neighbours = new ArrayList<>();
     private Stone aquiringStone = new Stone(MillColor.Non);
     public Position(int id) {
         this.ID = id;
     }
 
-    public void addNeighbour(Position position) {
-        neighbours.add(position);
-    }
     void setAquiringStone(Stone stone) throws AlreadyAquiredException {
         if(aquiringStone.COLOR == MillColor.Non || stone.COLOR == MillColor.Non) {
             this.aquiringStone = stone;
-            this.aquiringStone.setPosition(this);
+            this.aquiringStone.setPosition(this.ID);
         }else {
             throw new AlreadyAquiredException();
         }
@@ -33,8 +29,5 @@ public class Position {
     }
     public MillColor getColor() {
         return aquiringStone.COLOR;
-    }
-    public boolean isNeigbour(Position position){
-        return neighbours.contains(position);
     }
 }

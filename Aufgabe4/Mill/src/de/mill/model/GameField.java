@@ -11,6 +11,7 @@ import java.util.*;
 public class GameField {
 
     private static Map<Integer, List<List<Integer>>> millMap = new HashMap<>();
+    private static final List<Integer>[] neighbours = new ArrayList[24];
     static{
         List<Integer> list1 = new ArrayList<>(Arrays.asList(0,1,2));
         List<Integer> list2 = new ArrayList<>(Arrays.asList(3,4,5));
@@ -54,7 +55,107 @@ public class GameField {
         millMap.put(22, new ArrayList<>(Arrays.asList(list8, list13)));
         millMap.put(23, new ArrayList<>(Arrays.asList(list8, list16)));
 
+        initNeighbours();
+
     }
+    private static void initNeighbours(){
+        for (int i = 0; i < 24; i++ ){
+            neighbours[i] = new ArrayList<>();
+        }
+        neighbours[0].add(1);
+        neighbours[0].add(9);
+
+        neighbours[1].add(0);
+        neighbours[1].add(2);
+        neighbours[1].add(4);
+
+        neighbours[2].add(1);
+        neighbours[2].add(14);
+
+        neighbours[3].add(4);
+        neighbours[3].add(10);
+
+        neighbours[4].add(1);
+        neighbours[4].add(3);
+        neighbours[4].add(5);
+        neighbours[4].add(7);
+
+        neighbours[5].add(4);
+        neighbours[5].add(13);
+
+        neighbours[6].add(7);
+        neighbours[6].add(11);
+
+        neighbours[7].add(4);
+        neighbours[7].add(6);
+        neighbours[7].add(8);
+
+        neighbours[8].add(7);
+        neighbours[8].add(12);
+
+        neighbours[9].add(0);
+        neighbours[9].add(10);
+        neighbours[9].add(21);
+
+        neighbours[10].add(3);
+        neighbours[10].add(9);
+        neighbours[10].add(11);
+        neighbours[10].add(18);
+
+        neighbours[11].add(6);
+        neighbours[11].add(10);
+        neighbours[11].add(15);
+
+        neighbours[12].add(8);
+        neighbours[12].add(13);
+        neighbours[12].add(17);
+
+        neighbours[13].add(5);
+        neighbours[13].add(12);
+        neighbours[13].add(14);
+        neighbours[13].add(20);
+
+        neighbours[14].add(2);
+        neighbours[14].add(13);
+        neighbours[14].add(23);
+
+        neighbours[15].add(11);
+        neighbours[15].add(16);
+
+        neighbours[16].add(15);
+        neighbours[16].add(17);
+        neighbours[16].add(19);
+
+        neighbours[17].add(12);
+        neighbours[17].add(16);
+
+        neighbours[18].add(10);
+        neighbours[18].add(19);
+
+        neighbours[19].add(16);
+        neighbours[19].add(18);
+        neighbours[19].add(20);
+        neighbours[19].add(22);
+
+        neighbours[20].add(13);
+        neighbours[20].add(19);
+
+        neighbours[21].add(9);
+        neighbours[21].add(22);
+
+        neighbours[22].add(19);
+        neighbours[22].add(21);
+        neighbours[22].add(23);
+
+        neighbours[23].add(14);
+        neighbours[23].add(22);
+
+    }
+
+    public static boolean isNeighbour(int pos1, int pos2){
+        return neighbours[pos1].contains(pos2);
+    }
+
 
     private final Position[] gameField;
 
@@ -67,93 +168,6 @@ public class GameField {
         for(int i = 0; i < 24; i++){
             gameField[i] = new Position(i);
         }
-        gameField[0].addNeighbour(gameField[1]);
-        gameField[0].addNeighbour(gameField[9]);
-
-        gameField[1].addNeighbour(gameField[0]);
-        gameField[1].addNeighbour(gameField[2]);
-        gameField[1].addNeighbour(gameField[4]);
-
-        gameField[2].addNeighbour(gameField[1]);
-        gameField[2].addNeighbour(gameField[14]);
-
-        gameField[3].addNeighbour(gameField[4]);
-        gameField[3].addNeighbour(gameField[10]);
-
-        gameField[4].addNeighbour(gameField[1]);
-        gameField[4].addNeighbour(gameField[3]);
-        gameField[4].addNeighbour(gameField[5]);
-        gameField[4].addNeighbour(gameField[7]);
-
-        gameField[5].addNeighbour(gameField[4]);
-        gameField[5].addNeighbour(gameField[13]);
-
-        gameField[6].addNeighbour(gameField[7]);
-        gameField[6].addNeighbour(gameField[11]);
-
-        gameField[7].addNeighbour(gameField[4]);
-        gameField[7].addNeighbour(gameField[6]);
-        gameField[7].addNeighbour(gameField[8]);
-
-        gameField[8].addNeighbour(gameField[7]);
-        gameField[8].addNeighbour(gameField[12]);
-
-        gameField[9].addNeighbour(gameField[0]);
-        gameField[9].addNeighbour(gameField[10]);
-        gameField[9].addNeighbour(gameField[21]);
-
-        gameField[10].addNeighbour(gameField[3]);
-        gameField[10].addNeighbour(gameField[9]);
-        gameField[10].addNeighbour(gameField[11]);
-        gameField[10].addNeighbour(gameField[18]);
-
-        gameField[11].addNeighbour(gameField[6]);
-        gameField[11].addNeighbour(gameField[10]);
-        gameField[11].addNeighbour(gameField[15]);
-
-        gameField[12].addNeighbour(gameField[8]);
-        gameField[12].addNeighbour(gameField[13]);
-        gameField[12].addNeighbour(gameField[17]);
-
-        gameField[13].addNeighbour(gameField[5]);
-        gameField[13].addNeighbour(gameField[12]);
-        gameField[13].addNeighbour(gameField[14]);
-        gameField[13].addNeighbour(gameField[20]);
-
-        gameField[14].addNeighbour(gameField[2]);
-        gameField[14].addNeighbour(gameField[13]);
-        gameField[14].addNeighbour(gameField[23]);
-
-        gameField[15].addNeighbour(gameField[11]);
-        gameField[15].addNeighbour(gameField[16]);
-
-        gameField[16].addNeighbour(gameField[15]);
-        gameField[16].addNeighbour(gameField[17]);
-        gameField[16].addNeighbour(gameField[19]);
-
-        gameField[17].addNeighbour(gameField[12]);
-        gameField[17].addNeighbour(gameField[16]);
-
-        gameField[18].addNeighbour(gameField[10]);
-        gameField[18].addNeighbour(gameField[19]);
-
-        gameField[19].addNeighbour(gameField[16]);
-        gameField[19].addNeighbour(gameField[18]);
-        gameField[19].addNeighbour(gameField[20]);
-        gameField[19].addNeighbour(gameField[22]);
-
-        gameField[20].addNeighbour(gameField[13]);
-        gameField[20].addNeighbour(gameField[19]);
-
-        gameField[21].addNeighbour(gameField[9]);
-        gameField[21].addNeighbour(gameField[22]);
-
-        gameField[22].addNeighbour(gameField[19]);
-        gameField[22].addNeighbour(gameField[21]);
-        gameField[22].addNeighbour(gameField[23]);
-
-        gameField[23].addNeighbour(gameField[14]);
-        gameField[23].addNeighbour(gameField[22]);
     }
 
 
@@ -191,7 +205,7 @@ public class GameField {
 
     public Stone removeStone(int pos) {
         Stone stone = gameField[pos].getAquiringStone();
-        stone.setPosition(null);
+        stone.setPosition(-1);
         try {
             gameField[pos].setAquiringStone(new Stone(MillColor.Non));
         } catch (AlreadyAquiredException e) {
@@ -202,7 +216,7 @@ public class GameField {
 
     public boolean isOneStoneNotInMill(List<Stone> stones){
         for (Stone stone: stones){
-            if (stone.getPosition() != null && !isMill(stone.getPosition().ID)){
+            if (stone.getPosition() != -1 && !isMill(stone.getPosition())){
                 return true;
             }
         }
@@ -222,8 +236,8 @@ public class GameField {
 
     }
 
-    boolean isNeighbour(int pos1, int pos2){
-        return gameField[pos1].isNeigbour(gameField[pos2]);
-    }
+//    boolean isNeighbour(int pos1, int pos2){
+//        return isNeighbours(pos1, pos2);
+//    }
 
 }
