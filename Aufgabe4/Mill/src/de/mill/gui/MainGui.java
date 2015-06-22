@@ -75,6 +75,8 @@ public class MainGui implements Refresheable {
             statisticsPanel.setCurrentPlayerName(gameModel.getCurrentPlayer().NAME);
             statisticsPanel.setCurrentPlayerState(gameModel.getPlayerState().toString());
         }
+
+        System.out.println("next possible moves: " + gameModel.nextPossibleMove());
     }
 
     private void printMessage(String message){

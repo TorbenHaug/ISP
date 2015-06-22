@@ -6,8 +6,7 @@ import de.mill.enums.PlayerState;
 import de.mill.exceptions.*;
 import de.mill.interfaces.Refresheable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class MillGame {
@@ -17,6 +16,7 @@ public class MillGame {
     private final Player player2;
     private Player currentPlayer;
     private GameState gameState = GameState.Running;
+    private int tieCounter = 11;
 
     public MillGame(Player player1, Player player2){
         this.gameField = new GameField();
@@ -36,7 +36,7 @@ public class MillGame {
             this.currentPlayer = this.player2;
         }
         this.gameState = millGame.gameState;
-
+        this.tieCounter = millGame.tieCounter;
     }
 
     public void setStone(Player player, int pos) throws AlreadyAquiredException, WrongStateException {
@@ -132,12 +132,28 @@ public class MillGame {
             currentPlayer.setState(PlayerState.Set);
         }else{
             if (gameField.hasMoves(currentPlayer.getStonesOnField())){
-                currentPlayer.setState(PlayerState.Move);
+                if(!checkTie()) {
+                    currentPlayer.setState(PlayerState.Move);
+                }else {
+                    player1.setState(PlayerState.Tie);
+                    player2.setState(PlayerState.Tie);
+                    this.gameState = GameState.Finished;
+                }
             }else {
-
+                currentPlayer.setState(PlayerState.Loose);
+                getOpponent().setState(PlayerState.Win);
+                this.gameState = GameState.Finished;
             }
-
         }
+    }
+
+    private boolean checkTie() {
+        if ((player1.stonesInGame() == 3) && (player2.stonesInGame() == 3)){
+            if (--tieCounter == 0){
+                return true;
+            }
+        }
+        return false;
     }
 
     public PlayerState getPlayerState(){
@@ -167,5 +183,40 @@ public class MillGame {
         }else{
             throw new MoveNotAllowedException();
         }
+    }
+
+    // KI possible next moves
+    //{-1,[1,2,3,8]} --> aus dem Stock auf pos 1,2,3 oder 8
+    //{1, [2,3,8]} --> von 1 nach pos 2,3 oder 8
+    //{1, [-1]} --> remove 1
+    public Map<Integer, List<Integer>> nextPossibleMove(){
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        if (currentPlayer.getState() == PlayerState.Set){
+            map.put(-1, gameField.getNonStoneList());
+        } else if (currentPlayer.getState() == PlayerState.Move) {
+            if (currentPlayer.stonesInGame() == 3){
+                List<Integer> nonStoneList = gameField.getNonStoneList();
+                for (int pos : currentPlayer.getStonesOnField()){
+                    map.put(pos, nonStoneList);
+                }
+            } else if (currentPlayer.stonesInGame() > 3) {
+                for (int pos : currentPlayer.getStonesOnField()) {
+                    List<Integer> possibleMoves = gameField.getPossibleMovesFor(pos);
+                    if(!possibleMoves.isEmpty()){
+                        map.put(pos,possibleMoves);
+                    }
+                }
+            }
+
+        } else if (currentPlayer.getState() == PlayerState.Remove) {
+            for (int opponentStonePos : getOpponent().getStonesOnField()){
+                if (!gameField.isMill(opponentStonePos) || !gameField.isOneStoneNotInMill(getOpponent().getStonesOnField())){
+                    map.put(opponentStonePos, Arrays.asList(-1));
+                }
+            }
+        }
+
+        return map;
     }
 }

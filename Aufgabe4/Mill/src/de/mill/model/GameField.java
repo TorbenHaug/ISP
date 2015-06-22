@@ -59,6 +59,9 @@ public class GameField {
         initNeighbours();
 
     }
+
+    private List<Integer> nonStoneList;
+
     private static void initNeighbours(){
         for (int i = 0; i < 24; i++ ){
             neighbours[i] = new ArrayList<>();
@@ -240,8 +243,32 @@ public class GameField {
 
     public boolean hasMoves(List<Integer> stonesOnField) {
         for(int pos : stonesOnField){
-
+            for(int p : neighbours[pos]){
+                if (gameField[p] == MillColor.Non){
+                    return true;
+                }
+            }
         }
-        return true;
+        return false;
+    }
+
+    public List<Integer> getNonStoneList() {
+        List<Integer> nonStoneList = new ArrayList<>();
+         for (int i=0; i<gameField.length; i++){
+             if (gameField[i] == MillColor.Non){
+                 nonStoneList.add(i);
+             }
+         }
+        return nonStoneList;
+    }
+
+    public List<Integer> getPossibleMovesFor(int pos) {
+        List<Integer> possibleMoves = new ArrayList<>();
+        for(int possiblePos : neighbours[pos]){
+            if(gameField[possiblePos] == MillColor.Non){
+                possibleMoves.add(possiblePos);
+            }
+        }
+        return possibleMoves;
     }
 }

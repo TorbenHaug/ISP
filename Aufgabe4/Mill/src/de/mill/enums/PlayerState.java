@@ -9,5 +9,6 @@ public enum PlayerState {
     Move,
     Remove,
     Loose,
-    Win;
+    Win,
+    Tie;
 }
