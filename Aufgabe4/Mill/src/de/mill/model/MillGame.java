@@ -186,8 +186,8 @@ public class MillGame {
     }
 
     // KI possible next moves
-    //{-1,[1,2,3,8]} --> aus dem Stock auf pos 1,2,3 oder 8
-    //{1, [2,3,8]} --> von 1 nach pos 2,3 oder 8
+    //{-1,[1,2,3,8]} --> aus dem Stock auf POS 1,2,3 oder 8
+    //{1, [2,3,8]} --> von 1 nach POS 2,3 oder 8
     //{1, [-1]} --> remove 1
     public Map<Integer, List<Integer>> nextPossibleMove(){
         Map<Integer, List<Integer>> map = new HashMap<>();

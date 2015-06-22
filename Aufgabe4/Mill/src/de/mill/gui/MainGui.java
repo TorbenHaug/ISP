@@ -1,5 +1,7 @@
 package de.mill.gui;
 
+import de.mill.enums.PlayerState;
+import de.mill.interfaces.ButtonRefresh;
 import de.mill.interfaces.MessageReceiver;
 import de.mill.interfaces.Refresheable;
 import de.mill.enums.MillColor;
@@ -8,8 +10,7 @@ import de.mill.model.MillGame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -29,12 +30,19 @@ public class MainGui implements Refresheable {
     private final JMenuItem pvc;
     private final Color backGroundColor = new Color(255, 216, 127);
     private Color gameBackgroundColor = backGroundColor;
+    private final ButtonRefresh buttonRefresh;
 
     public MainGui(ActionListener pvpListener, ActionListener cvpListener, ActionListener pvcListener){
         this.receiver = new MessageReceiver() {
             @Override
             public void receiveMessage(String message) {
                 printMessage(message);
+            }
+        };
+        this.buttonRefresh = new ButtonRefresh() {
+            @Override
+            public void refresh() {
+                refreshButtons();
             }
         };
         mainWindow = new JFrame();
@@ -60,6 +68,7 @@ public class MainGui implements Refresheable {
 
         mainWindow.getContentPane().setBackground(backGroundColor);
         mainWindow.setVisible(true);
+
     }
 
     @Override
@@ -75,12 +84,45 @@ public class MainGui implements Refresheable {
             statisticsPanel.setCurrentPlayerName(gameModel.getCurrentPlayer().NAME);
             statisticsPanel.setCurrentPlayerState(gameModel.getPlayerState().toString());
         }
-
+        buttonRefresh.refresh();
         System.out.println("next possible moves: " + gameModel.nextPossibleMove());
     }
 
     private void printMessage(String message){
         System.out.println(message);
+    }
+
+    private void refreshButtons(){
+        Map<Integer, List<Integer>> possibleMoves = gameModel.nextPossibleMove();
+
+        if (gameModel.getCurrentPlayer().getState() == PlayerState.Set) {
+            List<Integer> settables = possibleMoves.get(-1);
+            for (StoneButton button : stoneButtons) {
+                button.setPossible(settables.contains(button.POS));
+            }
+        }else if(gameModel.getCurrentPlayer().getState() == PlayerState.Move){
+            if(StoneButton.getMoveFrom() == -1){
+                Set<Integer> possibleFrom = possibleMoves.keySet();
+                for (StoneButton button : stoneButtons) {
+                    button.setPossible(possibleFrom.contains(button.POS));
+                }
+            }else{
+                List<Integer> possibleFrom = possibleMoves.get(StoneButton.getMoveFrom());
+                for (StoneButton button : stoneButtons) {
+                    button.setPossible(possibleFrom.contains(button.POS));
+                }
+            }
+        } else if(gameModel.getCurrentPlayer().getState() == PlayerState.Remove){
+            Set<Integer> settables = possibleMoves.keySet();
+            for (StoneButton button : stoneButtons) {
+                button.setPossible(settables.contains(button.POS));
+            }
+        }
+        else {
+            for (StoneButton button : stoneButtons) {
+                button.setPossible(false);
+            }
+        }
     }
 
     public void setGameModel(MillGame gameModel){
@@ -106,7 +148,7 @@ public class MainGui implements Refresheable {
 
 
         for(int i=0; i< 24; i++){
-            StoneButton btn = new StoneButton(i, gameModel, receiver);
+            StoneButton btn = new StoneButton(i, gameModel, receiver, buttonRefresh);
             stoneButtons.add(btn);
             btn.setSize(42,42);
             btn.setLocation(0, 0);
