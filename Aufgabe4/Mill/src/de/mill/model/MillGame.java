@@ -131,7 +131,12 @@ public class MillGame {
         if(currentPlayer.hasStoneInStock()){
             currentPlayer.setState(PlayerState.Set);
         }else{
-            currentPlayer.setState(PlayerState.Move);
+            if (gameField.hasMoves(currentPlayer.getStonesOnField())){
+                currentPlayer.setState(PlayerState.Move);
+            }else {
+
+            }
+
         }
     }
 

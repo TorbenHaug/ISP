@@ -238,4 +238,10 @@ public class GameField {
     }
 
 
+    public boolean hasMoves(List<Integer> stonesOnField) {
+        for(int pos : stonesOnField){
+
+        }
+        return true;
+    }
 }
