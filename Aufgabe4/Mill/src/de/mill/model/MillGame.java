@@ -219,4 +219,18 @@ public class MillGame {
 
         return map;
     }
+
+    public void exec(int fromPos, int toPos) throws RuntimeException {
+        try {
+            if (fromPos == -1) {
+                setStone(currentPlayer, toPos);
+            } else if (toPos == -1) {
+                removeStone(currentPlayer, fromPos);
+            } else {
+                moveStone(currentPlayer, fromPos, toPos);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
