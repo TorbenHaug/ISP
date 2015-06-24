@@ -3,9 +3,9 @@ package de.mill.gui;
 import de.mill.enums.PlayerState;
 import de.mill.interfaces.ButtonRefresh;
 import de.mill.interfaces.MessageReceiver;
+import de.mill.interfaces.MillGame;
 import de.mill.interfaces.Refresheable;
 import de.mill.enums.MillColor;
-import de.mill.model.MillGame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,7 +85,7 @@ public class MainGui implements Refresheable {
             statisticsPanel.setCurrentPlayerState(gameModel.getPlayerState().toString());
         }
         buttonRefresh.refresh();
-        System.out.println("next possible moves: " + gameModel.nextPossibleMove());
+        System.out.println("MainGui 88: next possible moves: " + gameModel.nextPossibleMove());
     }
 
     private void printMessage(String message){

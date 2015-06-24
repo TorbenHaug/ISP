@@ -13,12 +13,14 @@ public class Player {
     private int stock;
     private final ArrayList<Integer> onField;
     private PlayerState state = PlayerState.Await;
+    private final boolean computer;
 
-    public Player(MillColor color, String name){
+    public Player(MillColor color, String name, boolean computer){
         this.stock = 9;
         this.NAME = name;
         this.COLOR = color;
         onField = new ArrayList<>();
+        this.computer = computer;
     }
 
     public Player(Player player){
@@ -27,6 +29,11 @@ public class Player {
         this.stock = player.stock;
         this.onField = new ArrayList<>(player.onField);
         this.state = player.state;
+        this.computer = player.computer;
+    }
+
+    public boolean isComputer(){
+        return computer;
     }
 
     public boolean hasStoneInStock(){

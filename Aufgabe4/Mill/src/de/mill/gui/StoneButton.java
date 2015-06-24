@@ -7,7 +7,6 @@ import de.mill.interfaces.ButtonRefresh;
 import de.mill.interfaces.MessageReceiver;
 import de.mill.enums.GameState;
 import de.mill.enums.MillColor;
-import de.mill.model.MillGame;
 import de.mill.enums.PlayerState;
 
 import javax.imageio.ImageIO;
@@ -48,13 +47,13 @@ public class StoneButton extends JButton implements ActionListener {
     }
 
     public final int POS;
-    private final MillGame gameModel;
+    private final de.mill.interfaces.MillGame gameModel;
     private final MessageReceiver receiver;
     private Border tmpBorder;
     private boolean possible = false;
     private final ButtonRefresh buttonRefresh;
 
-    public StoneButton(int pos, MillGame gameModel, MessageReceiver receiver, ButtonRefresh buttonRefresh){
+    public StoneButton(int pos, de.mill.interfaces.MillGame gameModel, MessageReceiver receiver, ButtonRefresh buttonRefresh){
         super(NON);
         this.buttonRefresh = buttonRefresh;
         this.receiver = receiver;

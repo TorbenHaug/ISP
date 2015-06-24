@@ -9,7 +9,7 @@ import de.mill.interfaces.Refresheable;
 import java.util.*;
 
 
-public class MillGame {
+public class MillGameImpl implements de.mill.interfaces.MillGame {
     private final GameField gameField;
     private final List<Refresheable> refresheables = new ArrayList<>();
     private final Player player1;
@@ -18,7 +18,7 @@ public class MillGame {
     private GameState gameState = GameState.Running;
     private int tieCounter = 11;
 
-    public MillGame(Player player1, Player player2){
+    public MillGameImpl(Player player1, Player player2){
         this.gameField = new GameField();
         this.player1 = player1;
         this.player2 = player2;
@@ -26,19 +26,20 @@ public class MillGame {
         currentPlayer = player1;
     }
 
-    public MillGame(MillGame millGame){
-        this.gameField = new GameField(millGame.gameField);
-        this.player1 = new Player(millGame.player1);
-        this.player2 = new Player(millGame.player2);
-        if (millGame.currentPlayer == millGame.player1){
+    public MillGameImpl(MillGameImpl millGameImpl){
+        this.gameField = new GameField(millGameImpl.gameField);
+        this.player1 = new Player(millGameImpl.player1);
+        this.player2 = new Player(millGameImpl.player2);
+        if (millGameImpl.currentPlayer == millGameImpl.player1){
             this.currentPlayer = this.player1;
         }else{
             this.currentPlayer = this.player2;
         }
-        this.gameState = millGame.gameState;
-        this.tieCounter = millGame.tieCounter;
+        this.gameState = millGameImpl.gameState;
+        this.tieCounter = millGameImpl.tieCounter;
     }
 
+    @Override
     public void setStone(Player player, int pos) throws AlreadyAquiredException, WrongStateException {
         checkRunning();
         if(player.getState() == PlayerState.Set) {
@@ -62,6 +63,7 @@ public class MillGame {
         }
     }
 
+    @Override
     public void removeStone(Player player, int pos) throws UnableToRemoveStoneException {
         checkRunning();
         if (player.getState() == PlayerState.Remove){
@@ -94,6 +96,7 @@ public class MillGame {
         }
     }
 
+    @Override
     public Player getOpponent() {
         if (currentPlayer == player1){
             return  player2;
@@ -102,14 +105,17 @@ public class MillGame {
         }
     }
 
+    @Override
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    @Override
     public List<MillColor> getCurrentField() {
         return gameField.getFieldStatus();
     }
 
+    @Override
     public void addRepaintable(Refresheable refresheable){
         refresheables.add(refresheable);
     }
@@ -120,6 +126,9 @@ public class MillGame {
         }
     }
 
+    /**
+     * SWITCH PLAYER
+     */
     private void switchPlayer(){
         currentPlayer.setState(PlayerState.Await);
         if(currentPlayer == player1){
@@ -156,14 +165,17 @@ public class MillGame {
         return false;
     }
 
+    @Override
     public PlayerState getPlayerState(){
         return currentPlayer.getState();
     }
 
+    @Override
     public GameState getGameState(){
         return gameState;
     }
 
+    @Override
     public void moveStone(Player player, int from, int to) throws MoveNotAllowedException {
         checkRunning();
         if(gameField.getColorFor(from) == player.COLOR && (gameField.isNeighbour(from,to) || player.stonesInGame() == 3)){
@@ -181,7 +193,7 @@ public class MillGame {
             }
             anounceRepaintable();
         }else{
-            throw new MoveNotAllowedException();
+            throw new MoveNotAllowedException("" + player.NAME + " From: " + from + ", To" + to);
         }
     }
 
@@ -189,6 +201,7 @@ public class MillGame {
     //{-1,[1,2,3,8]} --> aus dem Stock auf POS 1,2,3 oder 8
     //{1, [2,3,8]} --> von 1 nach POS 2,3 oder 8
     //{1, [-1]} --> remove 1
+    @Override
     public Map<Integer, List<Integer>> nextPossibleMove(){
         Map<Integer, List<Integer>> map = new HashMap<>();
 
@@ -220,6 +233,7 @@ public class MillGame {
         return map;
     }
 
+    @Override
     public void exec(int fromPos, int toPos) throws RuntimeException {
         try {
             if (fromPos == -1) {

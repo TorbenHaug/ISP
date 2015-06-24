@@ -1,20 +1,26 @@
 package de.mill.ai;
 
-import de.mill.model.MillGame;
-
-import java.util.List;
+import de.mill.enums.PlayerState;
+import de.mill.model.MillGameControl;
+import de.mill.model.MillGameImpl;
 
 public class Calculator {
-    public static int maxTreeDepth = -1;
-    private static Node bestNode = null;
+    public int maxTreeDepth = -1;
+    private Node bestNode = null;
 
-    public static void startCalculating(MillGame millGame, int maxTreeDepth){
-        Calculator.maxTreeDepth = maxTreeDepth;
-        max(new Node(new MillGame(millGame)), maxTreeDepth);
-        millGame.exec(bestNode.fromPos, bestNode.toPos);
+    public void startCalculating(MillGameControl millGame, int maxTreeDepth){
+        this.maxTreeDepth = maxTreeDepth;
+        System.out.println(max(new Node(new MillGameImpl(millGame.MILLGAME)), maxTreeDepth, Integer.MIN_VALUE, Integer.MAX_VALUE));
+        try {
+            millGame.exec(this.bestNode.fromPos, this.bestNode.toPos);
+        }catch(RuntimeException e) {
+            System.out.println("Calculator 17: " + bestNode.toString());
+            throw e;
+        }
+
     }
 
-    private static int max(Node node, int treeDepth){
+    private int max(Node node, int treeDepth, int alpha, int beta){
         if (treeDepth == 0 || node.isLeaf()){
             return node.eval();
         }
@@ -22,12 +28,23 @@ public class Calculator {
         int best = Integer.MIN_VALUE;
 
         for (Node succNode : node.succ()) {
-            int value = min(succNode,  treeDepth - 1);
+            int value = 0;
+            if(best > alpha){
+                alpha = best;
+            }
+            if (node.getCurrentPlayer().getState() == PlayerState.Remove){
+                value = max(succNode,  treeDepth - 1, alpha, beta);
+            } else {
+                value = min(succNode, treeDepth - 1, alpha, beta);
+            }
             if (value > best){
                 best = value;
                 if(treeDepth == maxTreeDepth){
                     bestNode = succNode;
                 }
+            }
+            if(best >= beta){
+                return best;
             }
         }
 
@@ -36,7 +53,7 @@ public class Calculator {
     }
 
 
-    private static int min(Node node, int treeDepth) {
+    private int min(Node node, int treeDepth, int alpha, int beta) {
         if (treeDepth == 0 || node.isLeaf()){
             return node.eval();
         }
@@ -44,9 +61,20 @@ public class Calculator {
         int best = Integer.MAX_VALUE;
 
         for (Node succNode : node.succ()) {
-            int value = max(succNode, treeDepth - 1);
+            int value = 0;
+            if(best < beta){
+                beta = best;
+            }
+            if (node.getCurrentPlayer().getState() == PlayerState.Remove){
+                value = min(succNode, treeDepth - 1, alpha, beta);
+            } else {
+                value = max(succNode, treeDepth - 1, alpha, beta);
+            }
             if (value < best){
                 best = value;
+            }
+            if(alpha >= best){
+                return best;
             }
         }
 

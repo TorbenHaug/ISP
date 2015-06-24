@@ -235,7 +235,7 @@ public class GameField {
             setStone(to, gameField[from]);
             setStone(from,MillColor.Non);
         } catch (AlreadyAquiredException e) {
-            throw new MoveNotAllowedException();
+            throw new MoveNotAllowedException("From: " + from + ", To" + to);
         }
 
     }
