@@ -28,11 +28,12 @@ public class MainGui implements Refresheable {
     private final JMenuItem pvp;
     private final JMenuItem cvp;
     private final JMenuItem pvc;
+    private final JMenuItem cvc;
     private final Color backGroundColor = new Color(255, 216, 127);
     private Color gameBackgroundColor = backGroundColor;
     private final ButtonRefresh buttonRefresh;
 
-    public MainGui(ActionListener pvpListener, ActionListener cvpListener, ActionListener pvcListener){
+    public MainGui(ActionListener pvpListener, ActionListener cvpListener, ActionListener pvcListener, ActionListener cvcListener){
         this.receiver = new MessageReceiver() {
             @Override
             public void receiveMessage(String message) {
@@ -62,6 +63,9 @@ public class MainGui implements Refresheable {
         pvc = new JMenuItem("Player vs. Computer");
         pvc.addActionListener(pvcListener);
         startMenu.add(pvc);
+        cvc = new JMenuItem("Computer vs. Computer");
+        cvc.addActionListener(cvcListener);
+        startMenu.add(cvc);
         menuBar.add(startMenu);
         mainWindow.setJMenuBar(menuBar);
 

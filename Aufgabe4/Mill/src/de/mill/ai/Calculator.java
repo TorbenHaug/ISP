@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Calculator {
     public int maxTreeDepth = -1;
-    private Node bestNode = null;
+    static private Node bestNode = null;
 
     public void startCalculating(MillGameControl millGame, int maxTreeDepth){
         this.maxTreeDepth = maxTreeDepth;
@@ -20,16 +20,17 @@ public class Calculator {
     }
 
     private int max(Node node, int treeDepth, int alpha, int beta){
-        if (treeDepth == 0 || node.isLeaf()){
+        if (treeDepth <= 0 || node.isLeaf()){
             int evalCalc = node.eval();
             return evalCalc;
         }
 
         int best = Integer.MIN_VALUE;
 
-        if(!node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Max Currentplayer is Not Computer: "); }
+        //if(!node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Max Currentplayer is Not Computer: "); }
 
         List<Node> successors = node.succ();
+
         successors.sort(new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
@@ -43,7 +44,7 @@ public class Calculator {
                 alpha = best;
             }
 
-            if (succNode.getCurrentPlayer().isComputer()){
+            if (succNode.getCurrentPlayer().COLOR == node.getCurrentPlayer().COLOR){
                 value = max(succNode,  treeDepth - 1, alpha, beta);
             } else {
                 value = min(succNode, treeDepth - 1, alpha, beta);
@@ -65,14 +66,15 @@ public class Calculator {
 
 
     private int min(Node node, int treeDepth, int alpha, int beta) {
-        if (treeDepth == 0 || node.isLeaf()){
+
+        if (treeDepth <= 0 || node.isLeaf()){
             int evalCalc = node.eval();
             return -evalCalc;
         }
 
         int best = Integer.MAX_VALUE;
 
-        if(node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Min Currentplayer is Not Human: "); }
+        //if(node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Min Currentplayer is Not Human: "); }
         List<Node> successors = node.succ();
         successors.sort(new Comparator<Node>() {
             @Override
@@ -85,7 +87,7 @@ public class Calculator {
             if(best < beta){
                 beta = best;
             }
-            if (!succNode.getCurrentPlayer().isComputer()){
+            if (succNode.getCurrentPlayer().COLOR == node.getCurrentPlayer().COLOR){
                 value = min(succNode, treeDepth - 1, alpha, beta);
             } else {
                 value = max(succNode, treeDepth - 1, alpha, beta);

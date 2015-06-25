@@ -51,7 +51,19 @@ public class Main {
         }
     };
 
+    private static final ActionListener cvcListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            player1 = new Player(MillColor.White, "Computer White", true);
+            player2 = new Player(MillColor.Black, "Computer Black", true);
+            currentGame = new MillGameControl(player1,player2);
+            currentGame.addRepaintable(gui);
+            gui.setGameModel(currentGame);
+            currentGame.startComputing();
+        }
+    };
+
     public static void main(String[] args){
-        gui = new MainGui(pvpListener, cvpListener, pvcListener);
+        gui = new MainGui(pvpListener, cvpListener, pvcListener, cvcListener);
     }
 }
