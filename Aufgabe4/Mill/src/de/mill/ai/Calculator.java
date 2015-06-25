@@ -6,6 +6,7 @@ import de.mill.model.MillGameImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Calculator {
@@ -24,18 +25,30 @@ public class Calculator {
 
     private int max(Node node, int treeDepth, int alpha, int beta){
         if (treeDepth == 0 || node.isLeaf()){
-            moveRatings.add(node.eval());
-            return node.eval();
+            int evalCalc = node.eval();
+            moveRatings.add(evalCalc);
+            return evalCalc;
         }
 
         int best = Integer.MIN_VALUE;
 
-        for (Node succNode : node.succ()) {
+        if(!node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Max Currentplayer is Not Computer: "); }
+
+        List<Node> successors = node.succ();
+        successors.sort(new Comparator<Node>() {
+            @Override
+            public int compare(Node o1, Node o2) {
+                return o2.eval() - o1.eval();
+            }
+        });
+
+        for (Node succNode : successors) {
             int value = 0;
-//            if(best > alpha){
-//                alpha = best;
-//            }
-            if (node.getCurrentPlayer().getState() == PlayerState.Remove){
+            if(best > alpha){
+                alpha = best;
+            }
+
+            if (succNode.getCurrentPlayer().isComputer()){
                 value = max(succNode,  treeDepth - 1, alpha, beta);
             } else {
                 value = min(succNode, treeDepth - 1, alpha, beta);
@@ -46,9 +59,9 @@ public class Calculator {
                     bestNode = succNode;
                 }
             }
-//            if(best >= beta){
-//                return best;
-//            }
+            if(best >= beta){
+                return best;
+            }
         }
 
         return best;
@@ -58,18 +71,27 @@ public class Calculator {
 
     private int min(Node node, int treeDepth, int alpha, int beta) {
         if (treeDepth == 0 || node.isLeaf()){
-            moveRatings.add(-node.eval());
-            return -node.eval();
+            int evalCalc = node.eval();
+            moveRatings.add(evalCalc);
+            return -evalCalc;
         }
 
         int best = Integer.MAX_VALUE;
 
-        for (Node succNode : node.succ()) {
+        if(node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Min Currentplayer is Not Human: "); }
+        List<Node> successors = node.succ();
+        successors.sort(new Comparator<Node>() {
+            @Override
+            public int compare(Node o1, Node o2) {
+                return o2.eval() - o1.eval();
+            }
+        });
+        for (Node succNode : successors) {
             int value = 0;
-//            if(best < beta){
-//                beta = best;
-//            }
-            if (node.getCurrentPlayer().getState() == PlayerState.Remove){
+            if(best < beta){
+                beta = best;
+            }
+            if (!succNode.getCurrentPlayer().isComputer()){
                 value = min(succNode, treeDepth - 1, alpha, beta);
             } else {
                 value = max(succNode, treeDepth - 1, alpha, beta);
@@ -77,9 +99,9 @@ public class Calculator {
             if (value < best){
                 best = value;
             }
-//            if(alpha >= best){
-//                return best;
-//            }
+            if(alpha >= best){
+                return best;
+            }
         }
 
         return best;

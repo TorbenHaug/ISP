@@ -11,8 +11,9 @@ import java.util.*;
  */
 public class GameField {
 
-    private static Map<Integer, List<List<Integer>>> millMap = new HashMap<>();
-    private static final List<Integer>[] neighbours = new ArrayList[24];
+    public static Map<Integer, List<List<Integer>>> millMap = new HashMap<>();
+    public static List<List<Integer>> mills = new ArrayList<>();
+    public static final List<Integer>[] neighbours = new ArrayList[24];
     static{
         List<Integer> list1 = new ArrayList<>(Arrays.asList(0,1,2));
         List<Integer> list2 = new ArrayList<>(Arrays.asList(3,4,5));
@@ -30,6 +31,23 @@ public class GameField {
         List<Integer> list14 = new ArrayList<>(Arrays.asList(8,12,17));
         List<Integer> list15 = new ArrayList<>(Arrays.asList(5,13,20));
         List<Integer> list16 = new ArrayList<>(Arrays.asList(2,14,23));
+
+        mills.add(list1);
+        mills.add(list2);
+        mills.add(list3);
+        mills.add(list4);
+        mills.add(list5);
+        mills.add(list6);
+        mills.add(list7);
+        mills.add(list8);
+        mills.add(list9);
+        mills.add(list10);
+        mills.add(list11);
+        mills.add(list12);
+        mills.add(list13);
+        mills.add(list14);
+        mills.add(list15);
+        mills.add(list16);
 
         millMap.put(0, new ArrayList<>(Arrays.asList(list1, list9)));
         millMap.put(1, new ArrayList<>(Arrays.asList(list1, list12)));
@@ -270,5 +288,15 @@ public class GameField {
             }
         }
         return possibleMoves;
+    }
+
+    public boolean isBlocked(Integer stone) {
+
+        for (int neighbour : neighbours[stone]){
+            if (gameField[neighbour] == MillColor.Non){
+                return false;
+            }
+        }
+        return true;
     }
 }

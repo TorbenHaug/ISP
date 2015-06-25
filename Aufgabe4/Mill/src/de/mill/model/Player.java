@@ -54,7 +54,7 @@ public class Player {
         onField.remove(stone);
     }
 
-    List<Integer> getStonesOnField(){
+    public List<Integer> getStonesOnField(){
         return onField;
     }
 

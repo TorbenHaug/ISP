@@ -86,7 +86,7 @@ public class MillGameControl implements MillGame {
 
     private void startComputing() {
         if(getCurrentPlayer().isComputer() && (getGameState() != GameState.Finished)) {
-            (new Calculator()).startCalculating(this, 5);
+            (new Calculator()).startCalculating(this, 7);
         }
     }
 }

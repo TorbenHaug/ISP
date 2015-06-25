@@ -4,12 +4,13 @@ import de.mill.enums.GameState;
 import de.mill.enums.MillColor;
 import de.mill.enums.PlayerState;
 import de.mill.exceptions.*;
+import de.mill.interfaces.MillGame;
 import de.mill.interfaces.Refresheable;
 
 import java.util.*;
 
 
-public class MillGameImpl implements de.mill.interfaces.MillGame {
+public class MillGameImpl implements MillGame {
     private final GameField gameField;
     private final List<Refresheable> refresheables = new ArrayList<>();
     private final Player player1;
@@ -246,5 +247,32 @@ public class MillGameImpl implements de.mill.interfaces.MillGame {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean isBlocked(Integer stone) {
+        return gameField.isBlocked(stone);
+
+    }
+
+    public int getMillDiff() {
+        int currentCount = 0;
+        int opponentCount = 0;
+
+        for (List<Integer> mill : GameField.mills){
+            MillColor color1 = gameField.getColorFor(mill.get(0));
+            MillColor color2 = gameField.getColorFor(mill.get(1));
+            MillColor color3 = gameField.getColorFor(mill.get(2));
+
+            if(color1 != MillColor.Non && color1 == color2 && color2 == color3){
+                if (color1 == getCurrentPlayer().COLOR){
+                    currentCount++;
+                } else {
+                    opponentCount++;
+                }
+            }
+
+        }
+
+        return currentCount - opponentCount;
     }
 }

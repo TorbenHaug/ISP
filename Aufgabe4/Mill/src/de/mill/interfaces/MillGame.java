@@ -41,4 +41,5 @@ public interface MillGame {
     Map<Integer, List<Integer>> nextPossibleMove();
 
     void exec(int fromPos, int toPos) throws RuntimeException;
+
 }
