@@ -38,26 +38,27 @@ public class Node {
 
     // heuristic
     public int eval(){
-        PlayerState currentState =  millGame.getCurrentPlayer().getState();
-        if (currentState == PlayerState.Set){
-            return 18 * recClosedMill() +  26 * millDiff() + 1 * blockedStones() + 9 * stoneDiff();
+        PlayerState currentState = millGame.getCurrentPlayer().getState();
+        if (currentState == PlayerState.Set) {
+            return 18 * recClosedMill() + 26 * millDiff() + 1 * blockedStones() + 9 * stoneDiff();
         } else if (currentState == PlayerState.Move || currentState == PlayerState.Remove ||
-                currentState == PlayerState.Win || currentState == PlayerState.Loose || currentState == PlayerState.Tie){
-            if (millGame.getCurrentPlayer().stonesInGame() > 3){
-                return 14 * recClosedMill() +  43 * millDiff() + 10 * blockedStones() + 11 * stoneDiff() + 1086 * winLoose();
+                currentState == PlayerState.Win || currentState == PlayerState.Loose || currentState == PlayerState.Tie) {
+            if (millGame.getCurrentPlayer().stonesInGame() > 3) {
+                return 14 * recClosedMill() + 43 * millDiff() + 10 * blockedStones() + 11 * stoneDiff() + 1086 * winLoose();
             } else {
                 return 14 * recClosedMill() + 1190 * winLoose();
             }
         } else {
             throw new RuntimeException("Wrong state to eval");
         }
+    }
+
 //        Evaluation function for Phase 1 = 18 * (1) + 26 * (2) + 1 * (3) + 9 * (4) + 10 * (5) + 7 * (6)
 //
 //        Evaluation function for Phase 2 = 14 * (1) + 43 * (2) + 10 * (3) + 11 * (4) + 8 * (7) + 1086 * (8)
 //
 //        Evaluation function for Phase 3 = 16 * (1) + 10 * (5) + 1 * (6) + 1190 * (8)
 //        https://kartikkukreja.wordpress.com/2014/03/17/heuristicevaluation-function-for-nine-mens-morris/
-    }
 
     // Regel 1
     private int recClosedMill(){
@@ -111,25 +112,24 @@ public class Node {
         }
     }
 
-
     public List<Node> succ(){
         List<Node> succNodeList = new ArrayList<>();
         Map<Integer, List<Integer>> possibleMoves = millGame.nextPossibleMove();
 
         if (millGame.getCurrentPlayer().getState() == PlayerState.Set) {
             List<Integer> settables = possibleMoves.get(-1);
-            for (int toPos: settables){
+            for (int toPos : settables) {
                 succNodeList.add(new Node(new MillGameImpl(millGame), -1, toPos));
             }
-        }else if(millGame.getCurrentPlayer().getState() == PlayerState.Move){
-            for(Map.Entry<Integer, List<Integer>> entry: possibleMoves.entrySet()){
-                for(int toPos : entry.getValue()){
+        } else if (millGame.getCurrentPlayer().getState() == PlayerState.Move) {
+            for (Map.Entry<Integer, List<Integer>> entry : possibleMoves.entrySet()) {
+                for (int toPos : entry.getValue()) {
                     succNodeList.add(new Node(new MillGameImpl(millGame), entry.getKey(), toPos));
                 }
             }
-        } else if(millGame.getCurrentPlayer().getState() == PlayerState.Remove){
+        } else if (millGame.getCurrentPlayer().getState() == PlayerState.Remove) {
             Set<Integer> settables = possibleMoves.keySet();
-            for(int fromPos : settables){
+            for (int fromPos : settables) {
                 succNodeList.add(new Node(new MillGameImpl(millGame), fromPos, -1));
             }
 
@@ -148,4 +148,5 @@ public class Node {
                 ", toPos=" + toPos +
                 '}';
     }
+
 }
