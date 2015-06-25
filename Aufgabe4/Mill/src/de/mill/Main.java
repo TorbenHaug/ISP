@@ -16,7 +16,7 @@ public class Main {
     private static MainGui gui;
     private static Player player1;
     private static Player player2;
-    private static de.mill.interfaces.MillGame currentGame;
+    private static MillGameControl currentGame;
     private static final ActionListener pvpListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -47,6 +47,7 @@ public class Main {
             currentGame = new MillGameControl(player1,player2);
             currentGame.addRepaintable(gui);
             gui.setGameModel(currentGame);
+            currentGame.startComputing();
         }
     };
 

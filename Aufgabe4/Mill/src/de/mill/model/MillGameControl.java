@@ -19,10 +19,12 @@ import java.util.Map;
  */
 public class MillGameControl implements MillGame {
     public final MillGameImpl MILLGAME;
+    private final MillGameControl currentInstance;
 
     public MillGameControl(Player player1, Player player2){
         MILLGAME = new MillGameImpl(player1, player2);
-        startComputing();
+        currentInstance = this;
+        //startComputing();
     }
 
     @Override
@@ -84,9 +86,18 @@ public class MillGameControl implements MillGame {
         startComputing();
     }
 
-    private void startComputing() {
+    public void startComputing() {
         if(getCurrentPlayer().isComputer() && (getGameState() != GameState.Finished)) {
-            (new Calculator()).startCalculating(this, 7);
+            MILLGAME.setGameState(GameState.Computing);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    (new Calculator()).startCalculating(currentInstance, 8);
+                }
+            }).start();
+        } else if (getGameState() != GameState.Finished){
+            MILLGAME.setGameState(GameState.Running);
         }
+        MILLGAME.anounceRepaintable();
     }
 }

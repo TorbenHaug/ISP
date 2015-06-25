@@ -12,21 +12,16 @@ import java.util.List;
 public class Calculator {
     public int maxTreeDepth = -1;
     private Node bestNode = null;
-    public List<Integer> moveRatings = new ArrayList<>();
 
     public void startCalculating(MillGameControl millGame, int maxTreeDepth){
         this.maxTreeDepth = maxTreeDepth;
-        System.out.println("Calculator Best Value: " + max(new Node(new MillGameImpl(millGame.MILLGAME)), maxTreeDepth, Integer.MIN_VALUE, Integer.MAX_VALUE));
-        System.out.println("Expected Best Value: " + Collections.max(moveRatings));
-        System.out.println("Expected Worst Value: " + Collections.min(moveRatings));
-        System.out.println("Expected Last Value: " + moveRatings.get(moveRatings.size()-1));
+        max(new Node(new MillGameImpl(millGame.MILLGAME)), maxTreeDepth, Integer.MIN_VALUE, Integer.MAX_VALUE);
         millGame.exec(this.bestNode.fromPos, this.bestNode.toPos);
     }
 
     private int max(Node node, int treeDepth, int alpha, int beta){
         if (treeDepth == 0 || node.isLeaf()){
             int evalCalc = node.eval();
-            moveRatings.add(evalCalc);
             return evalCalc;
         }
 
@@ -72,7 +67,6 @@ public class Calculator {
     private int min(Node node, int treeDepth, int alpha, int beta) {
         if (treeDepth == 0 || node.isLeaf()){
             int evalCalc = node.eval();
-            moveRatings.add(evalCalc);
             return -evalCalc;
         }
 

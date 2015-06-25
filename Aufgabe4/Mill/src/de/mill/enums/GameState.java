@@ -5,5 +5,5 @@ package de.mill.enums;
  */
 public enum GameState {
     Running,
-    Finished;
+    Finished, Computing;
 }

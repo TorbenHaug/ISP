@@ -137,7 +137,7 @@ public class StoneButton extends JButton implements ActionListener {
 
     public void setPossible(boolean possible) {
         this.possible = possible;
-        if(possible){
+        if(gameModel.getGameState() == GameState.Running && possible){
             this.setBorder(possibleBorder);
             tmpBorder = possibleBorder;
         }else{

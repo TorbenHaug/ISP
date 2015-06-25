@@ -56,8 +56,6 @@ public class MillGameImpl implements MillGame {
             } catch (AlreadyAquiredException e) {
                 player.addStoneToStock(pos);
                 throw e;
-            } finally {
-                anounceRepaintable();
             }
         }else{
             throw new WrongStateException();
@@ -81,7 +79,6 @@ public class MillGameImpl implements MillGame {
                     getCurrentPlayer().setState(PlayerState.Loose);
                     getOpponent().setState(PlayerState.Win);
                 }
-                anounceRepaintable();
             }else{
                 throw new UnableToRemoveStoneException();
             }
@@ -121,7 +118,7 @@ public class MillGameImpl implements MillGame {
         refresheables.add(refresheable);
     }
 
-    private void anounceRepaintable(){
+    public void anounceRepaintable(){
         for(Refresheable refresheable : refresheables){
             refresheable.refresh();
         }
@@ -176,6 +173,10 @@ public class MillGameImpl implements MillGame {
         return gameState;
     }
 
+    public void setGameState(GameState gameState){
+        this.gameState = gameState;
+    }
+
     @Override
     public void moveStone(Player player, int from, int to) throws MoveNotAllowedException {
         checkRunning();
@@ -192,7 +193,6 @@ public class MillGameImpl implements MillGame {
             }else {
                 switchPlayer();
             }
-            anounceRepaintable();
         }else{
             throw new MoveNotAllowedException("" + player.NAME + " From: " + from + ", To" + to);
         }
