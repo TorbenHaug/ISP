@@ -88,6 +88,16 @@ public class MillGameImpl implements MillGame {
         }
     }
 
+    @Override
+    public Player getWhitePlayer() {
+        return player1;
+    }
+
+    @Override
+    public Player getBlackPlayer() {
+        return player2;
+    }
+
     private void checkRunning() {
         if (gameState == GameState.Finished){
             throw new FinishedGameException();

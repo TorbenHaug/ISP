@@ -8,9 +8,11 @@ import de.mill.exceptions.AlreadyAquiredException;
 import de.mill.exceptions.MoveNotAllowedException;
 import de.mill.exceptions.UnableToRemoveStoneException;
 import de.mill.exceptions.WrongStateException;
+import de.mill.interfaces.MessageReceiver;
 import de.mill.interfaces.MillGame;
 import de.mill.interfaces.Refresheable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,7 @@ import java.util.Map;
 public class MillGameControl implements MillGame {
     public final MillGameImpl MILLGAME;
     private final MillGameControl currentInstance;
+    private final List<MessageReceiver> messageReceivers = new ArrayList<>();
 
     public MillGameControl(Player player1, Player player2){
         MILLGAME = new MillGameImpl(player1, player2);
@@ -30,13 +33,25 @@ public class MillGameControl implements MillGame {
     @Override
     public void setStone(Player player, int pos) throws AlreadyAquiredException, WrongStateException {
         MILLGAME.setStone(player, pos);
+        sendMessage(player.NAME + ": Set Stone to " + pos + ".");
         startComputing();
     }
 
     @Override
     public void removeStone(Player player, int pos) throws UnableToRemoveStoneException {
         MILLGAME.removeStone(player, pos);
+        sendMessage(player.NAME + ": Remove Stone from " + pos + ".");
         startComputing();
+    }
+
+    @Override
+    public Player getWhitePlayer() {
+        return MILLGAME.getWhitePlayer();
+    }
+
+    @Override
+    public Player getBlackPlayer() {
+        return MILLGAME.getBlackPlayer();
     }
 
     @Override
@@ -72,6 +87,7 @@ public class MillGameControl implements MillGame {
     @Override
     public void moveStone(Player player, int from, int to) throws MoveNotAllowedException {
         MILLGAME.moveStone(player, from, to);
+        sendMessage(player.NAME + ": Move Stone from " + from + " to " + to + ".");
         startComputing();
     }
 
@@ -82,6 +98,17 @@ public class MillGameControl implements MillGame {
 
     @Override
     public void exec(int fromPos, int toPos) throws RuntimeException {
+        try {
+            if (fromPos == -1) {
+                sendMessage(getCurrentPlayer().NAME + ": Set Stone to " + toPos + ".");
+            } else if (toPos == -1) {
+                sendMessage(getCurrentPlayer().NAME + ": Remove Stone from " + fromPos + ".");
+            } else {
+                sendMessage(getCurrentPlayer().NAME + ": Move Stone from " + fromPos + " to " + toPos + ".");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         MILLGAME.exec(fromPos, toPos);
         startComputing();
     }
@@ -99,5 +126,16 @@ public class MillGameControl implements MillGame {
             MILLGAME.setGameState(GameState.Running);
         }
         MILLGAME.anounceRepaintable();
+    }
+
+    public void addMessageReceiver(MessageReceiver messageReceiver){
+        this.messageReceivers.add(messageReceiver);
+        messageReceiver.receiveMessage("added");
+    }
+
+    private void sendMessage(String message){
+        for (MessageReceiver messageReceiver: messageReceivers){
+            messageReceiver.receiveMessage(message);
+        }
     }
 }

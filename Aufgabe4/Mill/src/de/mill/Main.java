@@ -24,6 +24,7 @@ public class Main {
             player2 = new Player(MillColor.Black, "Black", false);
             currentGame = new MillGameControl(player1,player2);
             currentGame.addRepaintable(gui);
+            currentGame.addMessageReceiver(gui.getMessageReceiver());
             gui.setGameModel(currentGame);
         }
     };
@@ -35,6 +36,7 @@ public class Main {
             player2 = new Player(MillColor.Black, "Computer", true);
             currentGame = new MillGameControl(player1,player2);
             currentGame.addRepaintable(gui);
+            currentGame.addMessageReceiver(gui.getMessageReceiver());
             gui.setGameModel(currentGame);
         }
     };
@@ -46,6 +48,7 @@ public class Main {
             player2 = new Player(MillColor.Black, "Human", false);
             currentGame = new MillGameControl(player1,player2);
             currentGame.addRepaintable(gui);
+            currentGame.addMessageReceiver(gui.getMessageReceiver());
             gui.setGameModel(currentGame);
             currentGame.startComputing();
         }
@@ -58,6 +61,7 @@ public class Main {
             player2 = new Player(MillColor.Black, "Computer Black", true);
             currentGame = new MillGameControl(player1,player2);
             currentGame.addRepaintable(gui);
+            currentGame.addMessageReceiver(gui.getMessageReceiver());
             gui.setGameModel(currentGame);
             currentGame.startComputing();
         }

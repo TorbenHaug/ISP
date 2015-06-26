@@ -94,10 +94,9 @@ public class StoneButton extends JButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == this && gameModel.getGameState() != GameState.Finished && (this.possible || moveFrom == POS)){
+        if(e.getSource() == this && gameModel.getGameState() == GameState.Running && (this.possible || moveFrom == POS)){
             if(gameModel.getPlayerState() == PlayerState.Set) {
                 try {
-                    receiver.receiveMessage("Set " + gameModel.getCurrentPlayer().COLOR + " Stone to Position " + POS);
                     gameModel.setStone(gameModel.getCurrentPlayer(), POS);
                 } catch (AlreadyAquiredException e1) {
                     receiver.receiveMessage("Not allowed to set at position: " + POS);
@@ -115,7 +114,6 @@ public class StoneButton extends JButton implements ActionListener {
                     int tmpMoveFrom = moveFrom;
                     try {
                         moveFrom = -1;
-                        receiver.receiveMessage("Move Stone from " + tmpMoveFrom + " Stone to Position " + POS);
                         gameModel.moveStone(gameModel.getCurrentPlayer(),tmpMoveFrom, POS);
                     } catch (MoveNotAllowedException e1) {
                         moveFrom = tmpMoveFrom;
@@ -125,7 +123,6 @@ public class StoneButton extends JButton implements ActionListener {
                 }
             }else if(gameModel.getPlayerState() == PlayerState.Remove){
                 try {
-                    receiver.receiveMessage("Remove Stone from Position " + POS);
                     gameModel.removeStone(gameModel.getCurrentPlayer(), POS);
                 } catch (UnableToRemoveStoneException e1) {
                     receiver.receiveMessage("Not allowed to remove at position: " + POS);

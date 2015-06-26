@@ -20,6 +20,10 @@ public interface MillGame {
 
     void removeStone(Player player, int pos) throws UnableToRemoveStoneException;
 
+    Player getWhitePlayer();
+
+    Player getBlackPlayer();
+
     Player getOpponent();
 
     Player getCurrentPlayer();

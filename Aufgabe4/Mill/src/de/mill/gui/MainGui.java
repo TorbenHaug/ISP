@@ -6,6 +6,7 @@ import de.mill.interfaces.MessageReceiver;
 import de.mill.interfaces.MillGame;
 import de.mill.interfaces.Refresheable;
 import de.mill.enums.MillColor;
+import de.mill.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +21,7 @@ public class MainGui implements Refresheable {
     private final JFrame mainWindow;
     private JPanel gamePanel;
     private StatisticsPanel statisticsPanel;
+    private MessagePanel messagePanel;
     private final List<StoneButton> stoneButtons = new ArrayList<>();
     private MillGame gameModel;
     private final MessageReceiver receiver;
@@ -48,7 +50,7 @@ public class MainGui implements Refresheable {
         };
         mainWindow = new JFrame();
         mainWindow.setLayout(null);
-        mainWindow.setSize(960, 670);
+        mainWindow.setSize(960, 870);
         mainWindow.setResizable(false);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -75,6 +77,10 @@ public class MainGui implements Refresheable {
 
     }
 
+    public MessageReceiver getMessageReceiver() {
+        return receiver;
+    }
+
     @Override
     public void refresh() {
         Iterator<MillColor> it1 = gameModel.getCurrentField().iterator();
@@ -85,15 +91,27 @@ public class MainGui implements Refresheable {
         }
 
         if(statisticsPanel != null){
+            Player white = gameModel.getWhitePlayer();
+            Player black = gameModel.getBlackPlayer();
             statisticsPanel.setCurrentPlayerName(gameModel.getCurrentPlayer().NAME);
             statisticsPanel.setCurrentPlayerState(gameModel.getPlayerState().toString());
+            statisticsPanel.setGameState(gameModel.getGameState().toString());
+            statisticsPanel.setWhiteName(white.NAME);
+            statisticsPanel.setWhiteState(white.getState().toString());
+            statisticsPanel.setWhiteStock("" + white.getStock());
+            statisticsPanel.setWhiteStones("" + white.stonesInGame());
+            statisticsPanel.setBlackName(black.NAME);
+            statisticsPanel.setBlackState(black.getState().toString());
+            statisticsPanel.setBlackStock("" + black.getStock());
+            statisticsPanel.setBlackStones("" + black.stonesInGame());
         }
         buttonRefresh.refresh();
-        System.out.println("MainGui 88: next possible moves: " + gameModel.nextPossibleMove());
+        //System.out.println("MainGui 88: next possible moves: " + gameModel.nextPossibleMove());
     }
 
     private void printMessage(String message){
-        System.out.println(message);
+        if(messagePanel != null)
+            messagePanel.addMessage(message);
     }
 
     private void refreshButtons(){
@@ -148,9 +166,12 @@ public class MainGui implements Refresheable {
         gamePanel.setLocation(10, 10);
         gamePanel.setBorder(BorderFactory.createBevelBorder(0));
         gamePanel.setBackground(gameBackgroundColor);
+
+        if(!(messagePanel == null)){
+            mainWindow.remove(messagePanel);
+        }
+
         stoneButtons.clear();
-
-
         for(int i=0; i< 24; i++){
             StoneButton btn = new StoneButton(i, gameModel, receiver, buttonRefresh);
             stoneButtons.add(btn);
@@ -190,8 +211,14 @@ public class MainGui implements Refresheable {
         statisticsPanel.setBorder(BorderFactory.createBevelBorder(0));
         statisticsPanel.setBackground(gameBackgroundColor);
 
+        messagePanel = new MessagePanel();
+        messagePanel.setLocation(10, 630);
+        messagePanel.setBorder(BorderFactory.createBevelBorder(0));
+        messagePanel.setBackground(gameBackgroundColor);
+
         mainWindow.add(statisticsPanel);
         mainWindow.add(gamePanel);
+        mainWindow.add(messagePanel);
         mainWindow.repaint();
     }
 }

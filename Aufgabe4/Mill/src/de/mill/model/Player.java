@@ -58,6 +58,10 @@ public class Player {
         return onField;
     }
 
+    public int getStock() {
+        return stock;
+    }
+
     void setState(PlayerState state) {
         this.state = state;
     }
