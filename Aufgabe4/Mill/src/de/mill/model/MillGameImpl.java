@@ -33,7 +33,7 @@ public class MillGameImpl implements MillGame {
         this.player2 = new Player(millGameImpl.player2);
         if (millGameImpl.currentPlayer == millGameImpl.player1){
             this.currentPlayer = this.player1;
-        }else{
+        } else {
             this.currentPlayer = this.player2;
         }
         this.gameState = millGameImpl.gameState;
@@ -43,21 +43,21 @@ public class MillGameImpl implements MillGame {
     @Override
     public void setStone(Player player, int pos) throws AlreadyAquiredException, WrongStateException {
         checkRunning();
-        if(player.getState() == PlayerState.Set) {
+        if (player.getState() == PlayerState.Set) {
             MillColor stone = player.getStoneFromStock();
             try {
                 gameField.setStone(pos, stone);
                 player.addStoneToField(pos);
-                if(gameField.isMill(pos)){
+                if (gameField.isMill(pos)){
                     currentPlayer.setState(PlayerState.Remove);
-                }else {
+                } else {
                     switchPlayer();
                 }
             } catch (AlreadyAquiredException e) {
                 player.addStoneToStock(pos);
                 throw e;
             }
-        }else{
+        } else {
             throw new WrongStateException();
         }
     }
@@ -67,7 +67,7 @@ public class MillGameImpl implements MillGame {
         checkRunning();
         if (player.getState() == PlayerState.Remove){
             MillColor colorAtPos = gameField.getColorFor(pos);
-            if(!(colorAtPos == MillColor.Non) &&
+            if (!(colorAtPos == MillColor.Non) &&
                     !(colorAtPos == currentPlayer.COLOR) &&
                     (!gameField.isMill(pos) || !(gameField.isOneStoneNotInMill(getOpponent().getStonesOnField())))){
                 gameField.removeStone(pos);
@@ -79,11 +79,11 @@ public class MillGameImpl implements MillGame {
                     getCurrentPlayer().setState(PlayerState.Loose);
                     getOpponent().setState(PlayerState.Win);
                 }
-            }else{
+            } else {
                 throw new UnableToRemoveStoneException();
             }
 
-        }else {
+        } else {
             throw new WrongStateException();
         }
     }
@@ -108,7 +108,7 @@ public class MillGameImpl implements MillGame {
     public Player getOpponent() {
         if (currentPlayer == player1){
             return  player2;
-        }else{
+        } else {
             return player1;
         }
     }
@@ -139,24 +139,24 @@ public class MillGameImpl implements MillGame {
      */
     private void switchPlayer(){
         currentPlayer.setState(PlayerState.Await);
-        if(currentPlayer == player1){
+        if (currentPlayer == player1){
             currentPlayer = player2;
-        }else{
+        } else {
             currentPlayer = player1;
         }
 
-        if(currentPlayer.hasStoneInStock()){
+        if (currentPlayer.hasStoneInStock()){
             currentPlayer.setState(PlayerState.Set);
-        }else{
+        } else {
             if (gameField.hasMoves(currentPlayer.getStonesOnField())){
-                if(!checkTie()) {
+                if (!checkTie()) {
                     currentPlayer.setState(PlayerState.Move);
-                }else {
+                } else {
                     player1.setState(PlayerState.Tie);
                     player2.setState(PlayerState.Tie);
                     this.gameState = GameState.Finished;
                 }
-            }else {
+            } else {
                 currentPlayer.setState(PlayerState.Loose);
                 getOpponent().setState(PlayerState.Win);
                 this.gameState = GameState.Finished;
@@ -190,7 +190,7 @@ public class MillGameImpl implements MillGame {
     @Override
     public void moveStone(Player player, int from, int to) throws MoveNotAllowedException {
         checkRunning();
-        if(gameField.getColorFor(from) == player.COLOR && (gameField.isNeighbour(from,to) || player.stonesInGame() == 3)){
+        if (gameField.getColorFor(from) == player.COLOR && (gameField.isNeighbour(from,to) || player.stonesInGame() == 3)){
             try {
                 gameField.moveStone(from, to);
             } catch (MoveNotAllowedException e) {
@@ -198,9 +198,9 @@ public class MillGameImpl implements MillGame {
             }
             player.removeFromFieldList(from);
             player.addStoneToField(to);
-            if(gameField.isMill(to)){
+            if (gameField.isMill(to)){
                 currentPlayer.setState(PlayerState.Remove);
-            }else {
+            } else {
                 switchPlayer();
             }
         }else{
@@ -273,7 +273,7 @@ public class MillGameImpl implements MillGame {
             MillColor color2 = gameField.getColorFor(mill.get(1));
             MillColor color3 = gameField.getColorFor(mill.get(2));
 
-            if(color1 != MillColor.Non && color1 == color2 && color2 == color3){
+            if (color1 != MillColor.Non && color1 == color2 && color2 == color3){
                 if (color1 == getCurrentPlayer().COLOR){
                     currentCount++;
                 } else {
