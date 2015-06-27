@@ -282,7 +282,35 @@ public class MillGameImpl implements MillGame {
             }
 
         }
+        return currentCount - opponentCount;
+    }
 
+    /**
+     * Two pieces in a mill construction have the same color and the third piece is a non-stone
+     * @return The difference between the two piece construction of the computer and the user
+     */
+    public int twoPiece() {
+        int currentCount = 0;
+        int opponentCount = 0;
+
+        for (List<Integer> mill : GameField.mills) {
+            MillColor color1 = gameField.getColorFor(mill.get(0));
+            MillColor color2 = gameField.getColorFor(mill.get(1));
+            MillColor color3 = gameField.getColorFor(mill.get(2));
+
+            MillColor nonColor = MillColor.Non;
+
+            if (color1 == nonColor && color2 == color3 && color2 != nonColor||
+                color2 == nonColor && color1 == color3 && color1 != nonColor||
+                color3 == nonColor && color2 == color1 && color2 != nonColor) {
+                System.out.println("color1: " + color1 + " color2: " + color2 + " color3: " + color3);
+                if (color3 == getCurrentPlayer().COLOR || color1 == getCurrentPlayer().COLOR) {
+                    currentCount++;
+                } else {
+                    opponentCount++;
+                }
+            }
+        }
         return currentCount - opponentCount;
     }
 }

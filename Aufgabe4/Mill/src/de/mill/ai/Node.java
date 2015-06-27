@@ -40,13 +40,13 @@ public class Node {
     public int eval(){
         PlayerState currentState = millGame.getCurrentPlayer().getState();
         if (currentState == PlayerState.Set) {
-            return 18 * recClosedMill() + 26 * millDiff() + 1 * blockedStones() + 9 * stoneDiff();
+            return 18 * recClosedMill() + 26 * millDiff() + 1 * blockedStones() + 9 * stoneDiff(); //+ 10 * twoPiece();
         } else if (currentState == PlayerState.Move || currentState == PlayerState.Remove ||
                 currentState == PlayerState.Win || currentState == PlayerState.Loose || currentState == PlayerState.Tie) {
             if (millGame.getCurrentPlayer().stonesInGame() > 3) {
                 return 14 * recClosedMill() + 43 * millDiff() + 10 * blockedStones() + 11 * stoneDiff() + 1086 * winLoose();
             } else {
-                return 14 * recClosedMill() + 1190 * winLoose();
+                return 16 * recClosedMill() + 1190 * winLoose();
             }
         } else {
             throw new RuntimeException("Wrong state to eval");
@@ -100,6 +100,11 @@ public class Node {
     private int stoneDiff(){
         return millGame.getCurrentPlayer().stonesInGame() - millGame.getOpponent().stonesInGame();
     }
+
+//    // Regel 5:
+//    private int twoPiece(){
+//        return millGame.twoPiece();
+//    }
 
     // Regel 8:
     private int winLoose(){

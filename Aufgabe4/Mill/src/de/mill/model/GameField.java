@@ -251,15 +251,23 @@ public class GameField {
     public void moveStone(int from, int to) throws MoveNotAllowedException {
         try {
             setStone(to, gameField[from]);
-            setStone(from,MillColor.Non);
+            setStone(from, MillColor.Non);
         } catch (AlreadyAquiredException e) {
             throw new MoveNotAllowedException("From: " + from + ", To" + to);
         }
 
     }
 
-
+    /**
+     * Checks if player is blocked
+     * @param stonesOnField a list of all current players pieces
+     * @return true is current player can move its pieces, otherwise false
+     */
     public boolean hasMoves(List<Integer> stonesOnField) {
+        if (stonesOnField.size() == 3){
+            return true;
+        }
+
         for(int pos : stonesOnField){
             for(int p : neighbours[pos]){
                 if (gameField[p] == MillColor.Non){
@@ -291,7 +299,6 @@ public class GameField {
     }
 
     public boolean isBlocked(Integer stone) {
-
         for (int neighbour : neighbours[stone]){
             if (gameField[neighbour] == MillColor.Non){
                 return false;
