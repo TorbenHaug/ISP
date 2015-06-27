@@ -4,20 +4,24 @@ import de.mill.enums.PlayerState;
 import de.mill.model.MillGameControl;
 import de.mill.model.MillGameImpl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Calculator {
     public int maxTreeDepth = -1;
-    static private Node bestNode = null;
+    private Node bestNode = null;
 
-    public void startCalculating(MillGameControl millGame, int maxTreeDepth){
+    public long startCalculating(MillGameControl millGame, int maxTreeDepth){
+        long start = System.currentTimeMillis();
         this.maxTreeDepth = maxTreeDepth;
         max(new Node(new MillGameImpl(millGame.MILLGAME)), maxTreeDepth, Integer.MIN_VALUE, Integer.MAX_VALUE);
         millGame.exec(this.bestNode.fromPos, this.bestNode.toPos);
+        return System.currentTimeMillis() - start;
     }
+
 
     private int max(Node node, int treeDepth, int alpha, int beta){
         if (treeDepth <= 0 || node.isLeaf()){
@@ -29,16 +33,7 @@ public class Calculator {
 
         //if(!node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Max Currentplayer is Not Computer: "); }
 
-        List<Node> successors = node.succ();
-
-        successors.sort(new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-                return o2.eval() - o1.eval();
-            }
-        });
-
-        for (Node succNode : successors) {
+        for (Node succNode : node.succ()) {
             int value = 0;
             if(best > alpha){
                 alpha = best;
@@ -75,14 +70,8 @@ public class Calculator {
         int best = Integer.MAX_VALUE;
 
         //if(node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Min Currentplayer is Not Human: "); }
-        List<Node> successors = node.succ();
-        successors.sort(new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-                return o2.eval() - o1.eval();
-            }
-        });
-        for (Node succNode : successors) {
+
+        for (Node succNode : node.succ()) {
             int value = 0;
             if(best < beta){
                 beta = best;
@@ -102,5 +91,4 @@ public class Calculator {
 
         return best;
     }
-
 }

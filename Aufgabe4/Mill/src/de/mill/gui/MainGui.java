@@ -1,5 +1,6 @@
 package de.mill.gui;
 
+import de.mill.Options;
 import de.mill.enums.PlayerState;
 import de.mill.interfaces.ButtonRefresh;
 import de.mill.interfaces.MessageReceiver;
@@ -10,6 +11,7 @@ import de.mill.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
  */
 public class MainGui implements Refresheable {
     private final JFrame mainWindow;
+    private final Options options;
     private JPanel gamePanel;
     private StatisticsPanel statisticsPanel;
     private MessagePanel messagePanel;
@@ -27,15 +30,17 @@ public class MainGui implements Refresheable {
     private final MessageReceiver receiver;
     private final JMenuBar menuBar;
     private final JMenu startMenu;
+    private final JMenu extrasMenu;
     private final JMenuItem pvp;
     private final JMenuItem cvp;
     private final JMenuItem pvc;
     private final JMenuItem cvc;
+    private final JMenuItem optionsMenuItem;
     private final Color backGroundColor = new Color(255, 216, 127);
     private Color gameBackgroundColor = backGroundColor;
     private final ButtonRefresh buttonRefresh;
 
-    public MainGui(ActionListener pvpListener, ActionListener cvpListener, ActionListener pvcListener, ActionListener cvcListener){
+    public MainGui(ActionListener pvpListener, ActionListener cvpListener, ActionListener pvcListener, ActionListener cvcListener, Options options){
         this.receiver = new MessageReceiver() {
             @Override
             public void receiveMessage(String message) {
@@ -48,6 +53,7 @@ public class MainGui implements Refresheable {
                 refreshButtons();
             }
         };
+        this.options = options;
         mainWindow = new JFrame();
         mainWindow.setLayout(null);
         mainWindow.setSize(960, 870);
@@ -68,7 +74,20 @@ public class MainGui implements Refresheable {
         cvc = new JMenuItem("Computer vs. Computer");
         cvc.addActionListener(cvcListener);
         startMenu.add(cvc);
+
+        extrasMenu = new JMenu("Extras");
+        optionsMenuItem = new JMenuItem("Optionen");
+        optionsMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                OptionsDialog dialog = new OptionsDialog(mainWindow, options);
+                dialog.setVisible(true);
+            }
+        });
+        extrasMenu.add(optionsMenuItem);
+
         menuBar.add(startMenu);
+        menuBar.add(extrasMenu);
         mainWindow.setJMenuBar(menuBar);
 
 

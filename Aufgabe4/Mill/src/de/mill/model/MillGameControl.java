@@ -1,5 +1,6 @@
 package de.mill.model;
 
+import de.mill.Options;
 import de.mill.ai.Calculator;
 import de.mill.enums.GameState;
 import de.mill.enums.MillColor;
@@ -23,10 +24,12 @@ public class MillGameControl implements MillGame {
     public final MillGameImpl MILLGAME;
     private final MillGameControl currentInstance;
     private final List<MessageReceiver> messageReceivers = new ArrayList<>();
+    private final Options options;
 
-    public MillGameControl(Player player1, Player player2){
+    public MillGameControl(Player player1, Player player2, Options options){
         MILLGAME = new MillGameImpl(player1, player2);
         currentInstance = this;
+        this.options = options;
         //startComputing();
     }
 
@@ -119,7 +122,7 @@ public class MillGameControl implements MillGame {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    (new Calculator()).startCalculating(currentInstance, 8);
+                    sendMessage("Calculationtime : " + (((new Calculator()).startCalculating(currentInstance, options.getLevel())) / 1000) + " Seconds. ") ;
                 }
             }).start();
         } else if (getGameState() != GameState.Finished){

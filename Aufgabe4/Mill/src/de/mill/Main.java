@@ -3,7 +3,6 @@ package de.mill;
 import de.mill.gui.MainGui;
 import de.mill.enums.MillColor;
 import de.mill.model.MillGameControl;
-import de.mill.model.MillGameImpl;
 import de.mill.model.Player;
 
 import java.awt.event.ActionEvent;
@@ -17,12 +16,13 @@ public class Main {
     private static Player player1;
     private static Player player2;
     private static MillGameControl currentGame;
+    private static final Options options = new Options();
     private static final ActionListener pvpListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             player1 = new Player(MillColor.White, "White", false);
             player2 = new Player(MillColor.Black, "Black", false);
-            currentGame = new MillGameControl(player1,player2);
+            currentGame = new MillGameControl(player1,player2, options);
             currentGame.addRepaintable(gui);
             currentGame.addMessageReceiver(gui.getMessageReceiver());
             gui.setGameModel(currentGame);
@@ -34,7 +34,7 @@ public class Main {
         public void actionPerformed(ActionEvent e) {
             player1 = new Player(MillColor.White, "Human", false);
             player2 = new Player(MillColor.Black, "Computer", true);
-            currentGame = new MillGameControl(player1,player2);
+            currentGame = new MillGameControl(player1,player2, options);
             currentGame.addRepaintable(gui);
             currentGame.addMessageReceiver(gui.getMessageReceiver());
             gui.setGameModel(currentGame);
@@ -46,7 +46,7 @@ public class Main {
         public void actionPerformed(ActionEvent e) {
             player1 = new Player(MillColor.White, "Computer", true);
             player2 = new Player(MillColor.Black, "Human", false);
-            currentGame = new MillGameControl(player1,player2);
+            currentGame = new MillGameControl(player1,player2, options);
             currentGame.addRepaintable(gui);
             currentGame.addMessageReceiver(gui.getMessageReceiver());
             gui.setGameModel(currentGame);
@@ -59,7 +59,7 @@ public class Main {
         public void actionPerformed(ActionEvent e) {
             player1 = new Player(MillColor.White, "Computer White", true);
             player2 = new Player(MillColor.Black, "Computer Black", true);
-            currentGame = new MillGameControl(player1,player2);
+            currentGame = new MillGameControl(player1,player2, options);
             currentGame.addRepaintable(gui);
             currentGame.addMessageReceiver(gui.getMessageReceiver());
             gui.setGameModel(currentGame);
@@ -68,6 +68,6 @@ public class Main {
     };
 
     public static void main(String[] args){
-        gui = new MainGui(pvpListener, cvpListener, pvcListener, cvcListener);
+        gui = new MainGui(pvpListener, cvpListener, pvcListener, cvcListener, options);
     }
 }
