@@ -264,7 +264,7 @@ public class MillGameImpl implements MillGame {
 
     }
 
-    public int getMillDiff() {
+    public int getMillDiff(Player maxPlayer) {
         int currentCount = 0;
         int opponentCount = 0;
 
@@ -274,7 +274,7 @@ public class MillGameImpl implements MillGame {
             MillColor color3 = gameField.getColorFor(mill.get(2));
 
             if (color1 != MillColor.Non && color1 == color2 && color2 == color3){
-                if (color1 == getCurrentPlayer().COLOR){
+                if (color1 == maxPlayer.COLOR){
                     currentCount++;
                 } else {
                     opponentCount++;

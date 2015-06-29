@@ -76,4 +76,20 @@ public class Player {
     public void addStoneToField(int pos) {
         onField.add(pos);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Player player = (Player) o;
+
+        return COLOR == player.COLOR;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return COLOR != null ? COLOR.hashCode() : 0;
+    }
 }

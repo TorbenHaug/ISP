@@ -59,6 +59,10 @@ public class StoneButton extends JButton implements ActionListener {
         this.receiver = receiver;
         this.gameModel =  gameModel;
         this.POS = pos;
+        this.setText("" + pos);
+        this.setVerticalTextPosition(CENTER);
+        this.setHorizontalTextPosition(CENTER);
+        this.setForeground(Color.GRAY);
         setBackground(new Color(255, 255, 255, 0));
         setOpaque(false);
         addActionListener(this);

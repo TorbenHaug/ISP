@@ -3,6 +3,7 @@ package de.mill.ai;
 import de.mill.enums.PlayerState;
 import de.mill.model.MillGameControl;
 import de.mill.model.MillGameImpl;
+import de.mill.model.Player;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,9 +14,11 @@ import java.util.concurrent.TimeUnit;
 public class Calculator {
     public int maxTreeDepth = -1;
     private Node bestNode = null;
+    private Player maxPlayer;
 
     public long startCalculating(MillGameControl millGame, int maxTreeDepth){
         long start = System.currentTimeMillis();
+        maxPlayer = millGame.getCurrentPlayer();
         this.maxTreeDepth = maxTreeDepth;
         max(new Node(new MillGameImpl(millGame.MILLGAME)), maxTreeDepth, Integer.MIN_VALUE, Integer.MAX_VALUE);
         millGame.exec(this.bestNode.fromPos, this.bestNode.toPos);
@@ -25,13 +28,13 @@ public class Calculator {
 
     private int max(Node node, int treeDepth, int alpha, int beta){
         if (treeDepth <= 0 || node.isLeaf()){
-            int evalCalc = node.eval();
+            int evalCalc = node.eval(maxPlayer);
             return evalCalc;
         }
 
         int best = Integer.MIN_VALUE;
 
-        //if(!node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Max Currentplayer is Not Computer: "); }
+        if(!node.getCurrentPlayer().equals(maxPlayer)) { System.out.println("Calculator Max Currentplayer is Not Computer: "); }
 
         for (Node succNode : node.succ()) {
             int value = 0;
@@ -63,13 +66,13 @@ public class Calculator {
     private int min(Node node, int treeDepth, int alpha, int beta) {
 
         if (treeDepth <= 0 || node.isLeaf()){
-            int evalCalc = node.eval();
-            return -evalCalc;
+            int evalCalc = node.eval(maxPlayer);
+            return evalCalc;
         }
 
         int best = Integer.MAX_VALUE;
 
-        //if(node.getCurrentPlayer().isComputer()) { System.out.println("Calculator Min Currentplayer is Not Human: "); }
+        if(node.getCurrentPlayer().equals(maxPlayer)) { System.out.println("Calculator Min Currentplayer is Not Human: "); }
 
         for (Node succNode : node.succ()) {
             int value = 0;
